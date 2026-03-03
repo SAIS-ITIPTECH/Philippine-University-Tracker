@@ -47,7 +47,7 @@ function buildRegions() {
             });
 
             content.classList.toggle("show");
-            //chat gpt ginamit ko dito sa function na loadRegionUnits haha
+
             if (!content.dataset.loaded) {
                 loadRegionUnits(regionPrefix, content, region.name);
             }
@@ -244,4 +244,3 @@ async function getCollegesNames(municipalities, data){
 
     return universities;
 }
-//hanggang dito chat gpt
