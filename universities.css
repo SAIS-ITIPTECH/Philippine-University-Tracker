@@ -84,3 +84,11 @@ body {
     display: flex;
     flex-direction: column;
 }
+
+.uniInfoContainer{
+    display: flex;
+    flex-direction: column;
+    padding: 5px;
+    margin: 1px;
+    background-color: rgba(173, 241, 173, 0.507);
+}
