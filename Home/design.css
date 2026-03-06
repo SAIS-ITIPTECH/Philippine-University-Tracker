@@ -201,9 +201,13 @@ section{
     margin: 0 auto;
     display: flex;
 }
+.footBox{
+    display: flex;
+    flex-wrap: wrap;
+    gap: 56px;
+    padding: 20px;
+}
 .visitUs{
-    border: 2px solid rgba(255, 89, 0, 0.759);
-    width: 200px;
     display: inline-block;
     margin: 0 auto;
 }
