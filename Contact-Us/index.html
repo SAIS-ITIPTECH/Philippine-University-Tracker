@@ -4,7 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="design.css">
-    <title>PUT | Contact Us</title>
+    <link rel="icon" type="image/png" href="/images/log.png">
+    <title>Contact Us | Philippine University Tracker</title>
+
+    <script type="text/javascript"
+        src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js">
+    </script>
+     
+
 </head>
 <body>
     <header class="nav">
@@ -14,11 +21,72 @@
                 <li><a href="/Home/">Home</a></li>
                 <li><a href="/About-Us/">About Us</a></li>
                 <li><a href="/Contact-Us/">Contact Us</a></li>
-                <li><a href="/Feedback/">Feedback</a></li>
                 <li><a href="">Find University</a></li>
             </ul>
         </nav>
     </header>
-    
+    <section class="heroCon">
+        <h2>Get in Touch with the Developers</h2>
+        <p>We value your feedback as we continue to improve our API-powered tracker. Reach out to us for any technical inquiries or project suggestions.</p>
+    </section>
+    <section class="formCon">
+
+        <h2>Send us a Message</h2>
+        <p>We would love to hear from you! Please fill out the form below.</p>
+
+        <form id="contactForm">
+
+            <label for="name">Name</label>
+            <input type="text" placeholder="Juan Dela Cru" id="name" name="name" required autocomplete="off">
+
+            <label for="email">Email</label>
+            <input type="email" placeholder="juan@email.com" id="email" name="email" required autocomplete="off">
+
+            <label for="subject">Subject</label>
+            <input type="text" placeholder="Briefly describe the problem..." id="subject" name="subject" autocomplete="off">
+
+            <label for="message">Message</label>
+            <textarea placeholder="Tell us how we can help you..." id="message" name="message" required autocomplete="off"></textarea>
+
+            <button type="submit" >Submit</button>
+        </form>
+
+    </section>
+
+    <footer class="foot">
+        <div class="footCon">
+            
+            <div class="f infooter">
+                
+            </div>
+            <div class="f visit">
+                <h2>Visit Us</h2>
+                <li>
+                    <a href="">GitHub</a>
+                    <a href="">Facebook</a>
+                    <a href="">Twitter</a>
+                </li>
+            </div>
+            <div class="f help">
+                <h2>Help Center</h2>
+                <li>
+                    <a href="">Contact Support</a>
+                    <a href="">FAQ</a>
+                </li>
+            </div>
+            <div class="f legal">
+                <h2>Legal</h2>
+                <li>
+                    <a href="">Terms of Service</a>
+                    <a href="">Privacy Policy</a>
+                </li>
+            </div>
+        </div>
+        <hr>
+        <p class="ri">© 2026 Philippine University Tracker. All rights reserved.</p>
+
+        
+    </footer>
+    <script type="text/javascript" src="script.js/"></script>
 </body>
 </html>

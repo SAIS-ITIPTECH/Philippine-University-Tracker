@@ -70,3 +70,143 @@ section{
     font-weight: 600;
     border-bottom: 2px solid rgb(214, 82, 0);
 }
+.heroCon{
+    width: 100vw;
+    height: 30vh;
+    background-color: #ff914d;
+}
+.heroCon h2{
+    color: rgb(72, 32, 0);
+    font-size: 32px;
+    font-weight: 600;
+    margin: 0;
+    padding-top: 90px;
+    text-align: center;
+}
+.heroCon p{
+    color: rgb(72, 32, 0);
+    font-size: 20px;
+    font-weight: 500;
+    margin: 0;
+    padding-top: 20px;
+    text-align: center;
+}
+.formCon{
+    width: 100vw;
+    height: 110vh;
+    background-color: #ffffff;
+}
+.formCon h2{
+    color: rgb(72, 32, 0);
+    font-size: 28px;
+    font-weight: 600;
+    margin: 0;
+    padding-top: 50px;
+    text-align: center;
+}
+.formCon p{
+    color: rgb(72, 32, 0);
+    font-size: 18px;
+    font-weight: 500;
+    margin: 0;
+    padding-top: 20px;
+    text-align: center;
+    margin-bottom: 3%;
+}   
+
+#contactForm{
+    padding: 20px 40px;
+    border: 2px solid rgb(229, 229, 229);
+    width: 50%;
+    height: 60%;
+    margin: 0 auto;
+    display: block;
+    border-radius: 20px;
+    box-shadow: 0px 4px 4px rgba(41, 41, 41, 0.25);
+}
+#contactForm input, textarea{
+    width: 100%;    
+    padding: 10px;
+    margin-bottom: 20px;
+    border: 2px solid rgb(111, 111, 111);
+    border-radius: 5px;
+    outline: none;
+}
+textarea{
+    resize: none;
+    height: 150px;
+}
+
+#contactForm label{
+    color: rgb(72, 32, 0);
+    font-size: 15px;
+    font-weight: 500;
+}
+#contactForm button{
+    background-color: rgb(255, 89, 0);
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 25px;
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
+}
+
+.foot{
+    height: 50vh;
+    background-color: rgb(51, 20, 0);
+}
+.footCon{
+    padding: 1%;
+    width: 70%;
+    height: 70%;
+    margin: 0 auto;
+    display: flex;
+    gap: 10px;
+}
+.infooter{
+    width: 25%;
+    height: 100%;
+    background-image: url(/images/whitelogo.png);
+    background-size: contain;
+    background-repeat: no-repeat;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    padding-left: 0px;
+}
+.infooter p{
+    width: 80%;
+    justify-content: center;
+    font-size: 0.9rem;
+    font-weight: 500;
+    padding: 0;
+}
+.f{
+    width: 25%;
+    height: 100%;
+    padding-left: 100px;
+    justify-content: center;
+    align-items: center;
+    color: white;
+}
+.f li{
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+.f a{
+    text-decoration: none;
+    color: white;
+}
+hr{
+    width: 70%;
+    margin: 0 auto;
+}
+.ri{
+    margin-left: 15%;
+    color: white;
+    font-size: 14px;
+}
