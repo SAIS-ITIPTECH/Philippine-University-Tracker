@@ -155,7 +155,7 @@ function findUniversity(){
     localStorage.setItem("munuiciplaities", JSON.stringify(munuiciplaities))
     localStorage.setItem("cities", JSON.stringify(cities))
     localStorage.setItem("allUni", JSON.stringify(allUni))
-    window.open("../Find-University/index.html");
+    window.open("Find-University/index.html");
 }
 
 document.getElementById("find").addEventListener("click", ()=>{
