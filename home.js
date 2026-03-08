@@ -167,7 +167,7 @@ function results(type){
     localStorage.setItem("type", type)
     localStorage.setItem("allUni", JSON.stringify(allUni))
     localStorage.setItem("querry", document.getElementById("querry").value)
-    window.open("../Results/");
+    window.open("Results/");
 }
 
 const buttons = document.querySelectorAll(".results"); // select all elements with class
