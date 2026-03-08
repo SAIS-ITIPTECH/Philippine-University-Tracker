@@ -1,25 +1,83 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Universities</title>
+    <title>Find University | Philippine University Tracker</title>
+    <link rel="icon" type="image/png" href="/images/log.png">
     <link rel="stylesheet" href="universities.css">
-
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
 </head>
 
 <body class="page-fade">
 
-<header id="heads">
-    <div class="header-title">
-        Philippine University Tracker <span class="app">Application</span>
+    <header class="nav">
+        <div class="logo"></div>
+        <nav class="navLinks">
+            <ul>
+                <li><a href="../index.html">Home</a></li>
+                <li><a href="../About-Us">About Us</a></li>
+                <li><a href="../Contact-Us">Contact Us</a></li>
+                <li><a href="../Find-University" id="find">Find University</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <div class="mess">
+        <h2>Find Colleges and Universities</h2>
+        <p>Click a region below to view available provinces.</p>
     </div>
 
-    <a href="/Home/" class="btn-header">Home</a>
-</header>
+    <section class="findPage">
+        <div class="container">
 
-<p id="mess">
+            <div class="regions" id="regionsContainer">
+
+            </div>
+
+            <div class="universities" id="universities">
+
+            </div>
+
+        </div>
+    </section>
+
+    <footer class="foot">
+        <div class="footCon">
+            
+            <div class="f infooter">
+                
+            </div>
+            <div class="f visit">
+                <h2>Visit Us</h2>
+                <li>
+                    <a href="">GitHub</a>
+                    <a href="">Facebook</a>
+                    <a href="">Twitter</a>
+                </li>
+            </div>
+            <div class="f help">
+                <h2>Help Center</h2>
+                <li>
+                    <a href="">Contact Support</a>
+                    <a href="">FAQ</a>
+                </li>
+            </div>
+            <div class="f legal">
+                <h2>Legal</h2>
+                <li>
+                    <a href="">Terms of Service</a>
+                    <a href="">Privacy Policy</a>
+                </li>
+            </div>
+        </div>
+        <hr>
+        <p class="ri">© 2026 Philippine University Tracker. All rights reserved.</p>
+    </footer>
+
+<!-- <p id="mess">
     The Philippine University Tracker <span class="app">Application</span> allows you to look out for universities by region.
     Click a region below to view available provinces.
 </p>
@@ -31,7 +89,7 @@
     <div class="universities" id="universities">
 
     </div>
-</div>
+</div> -->
 
 
 <script src="universities.js"></script>

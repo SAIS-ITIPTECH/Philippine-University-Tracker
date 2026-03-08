@@ -155,7 +155,7 @@ function findUniversity(){
     localStorage.setItem("munuiciplaities", JSON.stringify(munuiciplaities))
     localStorage.setItem("cities", JSON.stringify(cities))
     localStorage.setItem("allUni", JSON.stringify(allUni))
-    window.open("Find-University/index.html");
+    window.location.href = "Find-University";
 }
 
 document.getElementById("find").addEventListener("click", ()=>{
@@ -167,7 +167,7 @@ function results(type){
     localStorage.setItem("type", type)
     localStorage.setItem("allUni", JSON.stringify(allUni))
     localStorage.setItem("querry", document.getElementById("querry").value)
-    window.open("Results/index.html");
+    window.location.href = "Results/index.html";
 }
 
 const buttons = document.querySelectorAll(".results"); // select all elements with class
