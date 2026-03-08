@@ -1,0 +1,128 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Poppins", sans-serif;
+}
+body {
+    background-image: url(university.jpg);
+    background-repeat: no-repeat;
+    background-size: cover;
+    line-height: 1.7;
+    overflow-x: hidden;
+}
+.page-fade {
+    opacity: 0;
+    animation: pageFadeIn 1s ease forwards;
+}
+@keyframes pageFadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+header {
+    width: 100%;
+    padding: 25px 80px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #f7c5c5;
+    box-shadow: 0px 2px 6px rgba(0,0,0,0.05);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+.logo {
+    font-size: 20px;
+    font-weight: 700;
+}
+.logo span {
+    color: #e7563c;
+}
+.btn-header {
+    padding: 10px 20px;
+    border: 2px solid #f14848;
+    border-radius: 25px;
+    color: #f04d47;
+    text-decoration: none;
+    font-weight: 600;
+    transition: 0.3s;
+}
+.btn-header:hover {
+    background: #f56257;
+    color: white;
+}
+.gsix {
+    width: 100%;
+    padding: 70px 80px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 60px;
+}
+.gsix-text {
+    max-width: 600px;
+}
+.welcome {
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: #020202;
+    margin-bottom: 10px;
+}
+.gsix-text h1 {
+    font-size: 2.5rem;
+    margin-bottom: 20px;
+}
+.gsix-text h1 span {
+    color: #f01d0d;
+}
+.desc {
+    font-size: 1.05rem;
+    margin-bottom: 30px;
+    color: #070606;
+}
+.btn-primary {
+    display: inline-block;
+    padding: 12px 28px;
+    background-color: #ff5842;
+    color: white;
+    text-decoration: none;
+    border-radius: 25px;
+    font-weight: 600;
+    transition: 0.3s;
+}
+.btn-primary:hover {
+    background: #f8b072;
+}
+.ong-img img {
+    width: 100%;
+    max-width: 350px;
+    border-radius: 20px;
+}
+@media (max-width: 900px) {
+
+    header {
+        padding: 20px;
+    }
+
+    .ong {
+        flex-direction: column;
+        padding: 60px 20px;
+        text-align: center;
+    }
+
+    .ong-text h1 {
+        font-size: 2rem;
+    }
+}
+@media (max-width: 480px) {
+
+    .ong-text h1 {
+        font-size: 1.6rem;
+    }
+
+    .btn-primary {
+        width: 100%;
+        text-align: center;
+    }
+}
