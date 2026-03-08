@@ -76,7 +76,7 @@ section{
     height: 100vh;
     margin: 0;
     padding: 0;
-    background-image: url('../images/homeOne1.png');
+    background-image: url('/images/homeOne1.png');
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
@@ -95,7 +95,7 @@ section{
     margin: 2% auto;
 }
 .homeImage{
-    background-image: url('../images/logo.png');
+    background-image: url('/images/logo.png');
     background-size: cover;
     background-repeat: no-repeat;
     width: 250px;
@@ -130,7 +130,7 @@ section{
     font-size: 1rem;
 }
 #searchIcon{
-    background-image: url('../images/searchIcon.png');
+    background-image: url('/images/searchIcon.png');
     background-size:2.5cap;
     background-position: center;
     background-repeat: no-repeat;
@@ -204,7 +204,7 @@ section{
 .infooter{
     width: 25%;
     height: 100%;
-    background-image: url('../images/whitelogo.png');
+    background-image: url('/images/whitelogo.png');
     background-size: contain;
     background-repeat: no-repeat;
     justify-content: center;

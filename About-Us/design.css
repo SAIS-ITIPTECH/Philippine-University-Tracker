@@ -27,7 +27,7 @@ section{
     z-index: 999;
 }
 .logo{
-    background-image: url(/images/textlogo.png);
+    background-image: url('../images/textlogo.png');
     background-size: contain;
     background-repeat: no-repeat;
     width: 250px;
@@ -74,7 +74,7 @@ section{
 
 .hero{
     height: 150vh;
-    background-image: url(/images/aboutBG3.svg);
+    background-image: url('../images/aboutBG3.svg');
     background-size: cover;
     background-position: center;
 }
@@ -121,7 +121,7 @@ section{
 .aboutImage{
     width: 39%;
     height: 300px;
-    background-image: url(/images/proStudent.jpg);
+    background-image: url('../images/proStudent.jpg');
     background-size: contain;
     background-repeat: no-repeat;
     position: relative;
@@ -151,7 +151,7 @@ section{
     padding: 20px 20px;
 }
 .aboutLogo{
-    background-image: url(/images/logo.png);
+    background-image: url('../images/logo.png');
     background-size: cover;
     background-position: center;
     width: 250px;
@@ -206,7 +206,7 @@ section{
 .realImg{
     width: 90%;
     height: 90%;
-    background-image: url(/images/logo.png);
+    background-image: url('../images/logo.png');
     background-size: cover;
     background-position: center;
     border-radius: 50%;
@@ -270,7 +270,7 @@ section{
 .infooter{
     width: 25%;
     height: 100%;
-    background-image: url(/images/whitelogo.png);
+    background-image: url('../images/whitelogo.png');
     background-size: contain;
     background-repeat: no-repeat;
     justify-content: center;

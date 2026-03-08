@@ -27,7 +27,7 @@ section{
     z-index: 999;
 }
 .logo{
-    background-image: url(/images/textlogo.png);
+    background-image: url('../images/textlogo.png');
     background-size: contain;
     background-repeat: no-repeat;
     width: 250px;
@@ -168,7 +168,7 @@ textarea{
 .infooter{
     width: 25%;
     height: 100%;
-    background-image: url(/images/whitelogo.png);
+    background-image: url('../images/whitelogo.png');
     background-size: contain;
     background-repeat: no-repeat;
     justify-content: center;
