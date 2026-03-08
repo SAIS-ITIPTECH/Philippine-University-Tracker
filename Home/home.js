@@ -17,16 +17,23 @@ Promise.all([
 ])
 
 .then(([r, p, c, m]) => {
-    regions = r;
-    provinces = p;
-    cities = c;
-    munuiciplaities = m
+    regions = fixEnye(r);
+    provinces = fixEnye(p);
+    cities = fixEnye(c);
+    munuiciplaities = fixEnye(m)
     allUniArrayBuilder()
 })
 
 .catch(err => {
     console.error(err);
 });
+
+function fixEnye(data){
+    data.forEach(element => {
+        element.name = element.name.replace('Ã±', '\u00f1')
+    });
+    return data
+}
 
 async function allUniArrayBuilder(){
     let index = 1
@@ -170,3 +177,4 @@ buttons.forEach(button => {
         results(event.target.value);
     });
 });
+
