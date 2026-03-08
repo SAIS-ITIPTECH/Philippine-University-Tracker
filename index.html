@@ -3,39 +3,79 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>University Tracker</title>
-    <link rel="stylesheet" href="main.css">
+    <title>Philippine University Tracker</title>
+    <link rel="icon" type="image/png" href="/images/log.png">
+    <link rel="stylesheet" href="design.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
 </head>
-
-<body class="page-fade" >
-    <header>
-        <div class="logo">Philippine University Tracking <span>Application</span></div>
-        <a href="#" class="btn-header">Call us?</a>
+<body>
+    
+    <header class="nav">
+        <div class="logo"></div>
+        <nav class="navLinks">
+            <ul>
+                <li><a href="../index.html">Home</a></li>
+                <li><a href="../About-Us">About Us</a></li>
+                <li><a href="../Contact-Us">Contact Us</a></li>
+                <li><a href="../Find-University" id="find">Find University</a></li>
+            </ul>
+        </nav>
     </header>
-
-    <section class="gsix fade-in">
-
-        <div class="gsix-text">
-            <p class="welcome">Hello there!</p>
-            <h1>We are Group 6 from <span> Bachelor of Science in Information Technology - 2B </span> on Colegio De Montalban!</h1>
-
-            <p class="desc">
-            We made a Tracker to find University that you might be interested with. You can look for your desired University here in our website.
-            </p><br><br>
-
-            <div class="ong-buttons">
-                <a href="universities.html" class="btn-primary">View Universities</a><br><br>
+    
+    <section class="home">
+        <div class="homeContent">
+            <div class="homeImage">
+            </div>
+            <h1>Look for your dream university!</h1>
+            <h3>Find the perfect fit for your future</h3>
+            <div class="search">
+                <input type="text" placeholder="Search for universities..." id="querry">
+                <button id="searchIcon" class="results" value="search"></button>
+            </div>
+            <div class="searchCategories">
+                <button class="results" value="university">Universities +</button>
+                <button class="results" value="college">Colleges +</button>
+                <button >Nearest +</button>
+                <button >Top rated +</button>
+                <button >Featured +</button>
             </div>
         </div>
-
-        <div class="gsix-img fade-in">
-            <img src="school.jpg" alt="whoop">
-        </div>
     </section>
+    
+    
+    <footer class="foot">
+        <div class="footCon">
+            
+            <div class="f infooter">
+                
+            </div>
+            <div class="f visit">
+                <h2>Visit Us</h2>
+                <li>
+                    <a href="">GitHub</a>
+                    <a href="">Facebook</a>
+                    <a href="">Twitter</a>
+                </li>
+            </div>
+            <div class="f help">
+                <h2>Help Center</h2>
+                <li>
+                    <a href="">Contact Support</a>
+                    <a href="">FAQ</a>
+                </li>
+            </div>
+            <div class="f legal">
+                <h2>Legal</h2>
+                <li>
+                    <a href="">Terms of Service</a>
+                    <a href="">Privacy Policy</a>
+                </li>
+            </div>
+        </div>
+        <hr>
+        <p class="ri">© 2026 Philippine University Tracker. All rights reserved.</p>
+    </footer>
 
-<script></script>
-</body>
-</html>
+    <script src="home.js"></script>
 </body>
 </html>
