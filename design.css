@@ -27,7 +27,7 @@ section{
     z-index: 999;
 }
 .logo{
-    background-image: url(images/textlogo.png);
+    background-image: url(images/textLogo.png);
     background-size: contain;
     background-repeat: no-repeat;
     width: 250px;
