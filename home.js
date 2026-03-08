@@ -149,7 +149,7 @@ function getUniUnderRegion(regionCode, municipalities){
 }
 
 function findUniversity(){
-    console.log("cliked")
+    console.log("clikeda")
     localStorage.setItem("regions", JSON.stringify(regions))
     localStorage.setItem("provinces", JSON.stringify(provinces))
     localStorage.setItem("munuiciplaities", JSON.stringify(munuiciplaities))
