@@ -203,24 +203,24 @@ async function getColleges(municipalities, name){
     for(let i = 0; i < universities.length;i++){
         //Create new container
         uniInfo[i] = document.createElement('div');
-        uniInfo[i].className = 'uniInfoContainer';
+        uniInfo[i].className = 'uniInfoContainer'; //class name para sa css
         uniDisplay.appendChild(uniInfo[i])
 
         //Create new name
         uniName[i] = document.createElement('p');
-        uniName[i].class = 'uniName';
+        uniName[i].class = 'uniName'; //class name para sa css
         uniName[i].innerHTML = `<b>${universities[i]['name']}</b> `;
 
         //Create new location
         uniLocation[i] = document.createElement('p')
-        uniLocation[i].class = 'uniLocation';
+        uniLocation[i].class = 'uniLocation'; //class name para sa css
         uniLocation[i].innerHTML = `Location: ${universities[i]['location']}`;
 
         //Go to website button
         uniWeb[i] = document.createElement('Button')
-        uniWeb[i].class = 'uniWebButton';
+        uniWeb[i].class = 'uniWebButton'; //class name para sa css
         uniWeb[i].innerHTML = 'visit website';
-        uniWeb[i].addEventListener("click", async (event) => {
+        uniWeb[i].addEventListener("click", async () => {
             let url = await search(universities[i]['name'])
             window.open(url);
         })
