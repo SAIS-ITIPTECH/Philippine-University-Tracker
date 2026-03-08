@@ -174,32 +174,6 @@ function getUniType(name){
     }   
 }
 
-function searchUniversity(querry){
-    let results = []
-    Object.values(allUni).forEach((a) =>{
-        for(let i = 0; i< a.length; i++){
-            if(new RegExp(querry, "i").test(a[i].name)){
-                results.push(a[i])
-            }
-        }
-    });
-    return results
-}
-
-function typeIdentifier(type){
-    let results = []
-    Object.values(allUni).forEach((a) =>{
-        for(let i = 0; i< a.length; i++){
-            console.log(a[i].type.toLowerCase() == type.toLowerCase())
-            if(a[i].type.toLowerCase() == type.toLowerCase()){
-                console.log("match")
-                results.push(a[i])
-            }
-        }
-    });
-    return results
-}
-
 function getUniUnderRegion(regionCode, municipalities){
     let results = []
     allUni[regionCode].forEach((content) =>{

@@ -154,3 +154,19 @@ function findUniversity(){
 document.getElementById("find").addEventListener("click", ()=>{
     findUniversity();
 })
+
+function results(type){
+    console.log("cliked")
+    localStorage.setItem("type", type)
+    localStorage.setItem("allUni", JSON.stringify(allUni))
+    localStorage.setItem("querry", document.getElementById("querry").value)
+    window.open("../Results/");
+}
+
+const buttons = document.querySelectorAll(".results"); // select all elements with class
+
+buttons.forEach(button => {
+    button.addEventListener("click", (event) => {
+        results(event.target.value);
+    });
+});

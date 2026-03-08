@@ -129,7 +129,7 @@ section{
     border: none;
     font-size: 1rem;
 }
-.searchIcon{
+#searchIcon{
     background-image: url('../images/searchIcon.png');
     background-size:2.5cap;
     background-position: center;
