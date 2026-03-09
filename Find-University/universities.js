@@ -1,4 +1,7 @@
 const regionsContainer = document.getElementById("regionsContainer");
+const provinceContainer = document.getElementById("provinceContainer");
+
+
 let regions = JSON.parse(localStorage.getItem("regions"));
 let provinces = JSON.parse(localStorage.getItem("provinces"));
 let cities = JSON.parse(localStorage.getItem("cities"));
@@ -13,18 +16,18 @@ function buildRegions() {
         const regionPrefix = region.code.substring(0, 2);
         const regionId = `region-${region.code}`;
 
-        const button = document.createElement("button");
-        button.className = "region-btn";
-        button.textContent = region.name;
+        const option = document.createElement("option");
+        option.className = "optRegion";
+        option.textContent = region.name;
 
         const content = document.createElement("div");
         content.className = "region-content";
         content.id = regionId;
 
-        regionsContainer.appendChild(button);
+        regionsContainer.appendChild(option);
         regionsContainer.appendChild(content);
 
-        button.addEventListener("click", () => {
+        option.addEventListener("click", () => {
             document.querySelectorAll(".region-content").forEach(c => {
                 if (c !== content) c.classList.remove("show");
             });
@@ -64,14 +67,10 @@ function loadRegionUnits(regionPrefix, container) {
         return;
     }
 
-
     
     //ILAGAY NA SA SCREEN
     if (matchedProvinces.length > 0 || regionPrefix == 13) {
-        const title = document.createElement("p");
-        title.innerHTML = "<strong>Provinces</strong>";
-        container.appendChild(title);
-
+ 
         matchedProvinces.forEach(p => {
             const el = document.createElement("button");
             el.textContent = p.name;
