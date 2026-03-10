@@ -89,7 +89,6 @@ function loadRegionUnits(regionPrefix, container) {
                 el.textContent = p.name;
                 el.addEventListener('click',() => {
                     let cityName = [p.name.replace(/\b(City of|City)\b\s*/gi, '').trim()];
-                    if(p.name == "City of Manila"){cityName = ['manila'];}
                     getUniUnderRegion(regionPrefix, cityName)
                 })
                 container.appendChild(el);
@@ -257,18 +256,25 @@ function getUniUnderRegion(regionCode, municipalities, province){
     }
     
     //Show results
-    results.forEach(a => {
+        results.forEach(a => {
         if(a['uni'].length == 0);
         else{
-            uniTitle = document.createElement('Ttile');
-            uniTitle.className = 'muniTitle';
-            let title = a["regionName"].toUpperCase()
-            uniTitle.innerHTML = title
-            uniDisplay.append(uniTitle)
+            let location;
+            if(province==undefined) location = a['regionName'];
+            else {
+                location = `${a['regionName']}, ${province}`
+                
+                uniTitle = document.createElement('Ttile');
+                uniTitle.className = 'muniTitle';
+                let title = a["regionName"].toUpperCase()
+                uniTitle.innerHTML = title
+                uniDisplay.append(uniTitle)
+            }
 
             let uniSorted = uniSort(a["uni"])
             uniSorted.forEach(res =>{
-                displayUni(uniDisplay, res['name'], res['type'], `${a['regionName']}, ${province}`)
+                
+                displayUni(uniDisplay, res['name'], res['type'], `${location}`)
             });
         }
     })
@@ -306,10 +312,10 @@ function displayUni(uniDisplay, name, type, location){
     uniMap = document.createElement('Button')
     uniMap.class = 'uniWebButton';
     uniMap.innerHTML = 'see on maps';
-    uniMap.addEventListener("click",  () => window.open(`https://www.google.com/maps/search/${results['name']}, ${results['location']}`))
+    uniMap.addEventListener("click",  () => window.open(`https://www.google.com/maps/search/${name}, ${location}`))
 
     //Add name and location on container
-                uniInfo.append(uniName, uniType, uniLocation , uniWeb, uniMap)
+    uniInfo.append(uniName, uniType, uniLocation , uniWeb, uniMap)
     
 }
 
