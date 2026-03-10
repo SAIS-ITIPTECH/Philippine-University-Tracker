@@ -165,19 +165,18 @@ document.getElementById("find").addEventListener("click", ()=>{
     findUniversity();
 })
 
-function results(type){
-    console.log("cliked")
-    localStorage.setItem("type", type)
+document.getElementById("searchIcon").addEventListener("click", ()=>{
     localStorage.setItem("allUni", JSON.stringify(allUni))
     localStorage.setItem("querry", document.getElementById("querry").value)
     window.location.href = "Results/index.html";
-}
+})
 
-const buttons = document.querySelectorAll(".results"); // select all elements with class
+const filteredButtons = document.querySelectorAll(".filtered"); // select all elements with class
 
-buttons.forEach(button => {
+filteredButtons.forEach(button => {
     button.addEventListener("click", (event) => {
-        results(event.target.value);
+        localStorage.setItem("filter", event.target.value);
+        window.location.href = "Find-University/index.html"
     });
 });
 

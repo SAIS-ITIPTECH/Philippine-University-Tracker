@@ -4,6 +4,7 @@ let provinces = JSON.parse(localStorage.getItem("provinces"));
 let cities = JSON.parse(localStorage.getItem("cities"));
 let munuiciplaities = JSON.parse(localStorage.getItem("munuiciplaities"));
 let allUni = JSON.parse(localStorage.getItem("allUni"));
+let filter = localStorage.getItem("filter")
 
 buildRegions();
 
@@ -225,7 +226,6 @@ async function search(name, loc) {
 
 function getUniUnderRegion(regionCode, municipalities, province){
     let results = []
-    let filter = "none"
 
     console.log(municipalities)
 
