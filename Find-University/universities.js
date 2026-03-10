@@ -6,11 +6,12 @@ let munuiciplaities = JSON.parse(localStorage.getItem("munuiciplaities"));
 let allUni = JSON.parse(localStorage.getItem("allUni"));
 let filter = localStorage.getItem("filter")
 
-console.log(filter)
+
 buildRegions();
 
 //gumawa ng mga buttons ng region
 function buildRegions() {
+    console.log(filter + "received")
     regions.forEach(region => {
         const regionPrefix = region.code.substring(0, 2);
         const regionId = `region-${region.code}`;
