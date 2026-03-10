@@ -38,13 +38,16 @@ function fixEnye(data){
 async function allUniArrayBuilder(){
     let index = 1
     console.log("wait")
-    for(let i = 1; i < 49; i += 3){
+    for(let i = 1; i < 50; i += 3){
+        console.log(i)
         let regUni = await regUniArrayBuilder(i)
         if(index < 10) allUni["0" + index] = regUni
+        else if(i == 43) allUni['19'] = regUni
         else allUni[index] = regUni
         index++
     }
     console.log("done")
+    console.log(allUni)
 }
 
 async function regUniArrayBuilder(ind){
@@ -155,7 +158,7 @@ function findUniversity(){
     localStorage.setItem("munuiciplaities", JSON.stringify(munuiciplaities))
     localStorage.setItem("cities", JSON.stringify(cities))
     localStorage.setItem("allUni", JSON.stringify(allUni))
-    window.location.href = "Find-University";
+    window.location.href = "Find-University/index.html";
 }
 
 document.getElementById("find").addEventListener("click", ()=>{
