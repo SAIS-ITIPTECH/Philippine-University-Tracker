@@ -6,6 +6,7 @@ let munuiciplaities = JSON.parse(localStorage.getItem("munuiciplaities"));
 let allUni = JSON.parse(localStorage.getItem("allUni"));
 let filter = localStorage.getItem("filter")
 
+console.log(filter)
 buildRegions();
 
 //gumawa ng mga buttons ng region

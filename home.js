@@ -158,6 +158,7 @@ function findUniversity(){
     localStorage.setItem("munuiciplaities", JSON.stringify(munuiciplaities))
     localStorage.setItem("cities", JSON.stringify(cities))
     localStorage.setItem("allUni", JSON.stringify(allUni))
+    localStorage.setItem("filter", "none");
     window.location.href = "Find-University/index.html";
 }
 
