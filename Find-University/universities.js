@@ -12,122 +12,65 @@ let filter = localStorage.getItem("filter")
 
 buildRegions();
 
-//gumawa ng mga buttons ng region
+// hinsdi na buttons gagawin nya, option na sa regions selection
 function buildRegions() {
-    console.log(filter + "received")
+
+    regionsContainer.innerHTML = '<option value="">Select Region</option>';
+
     regions.forEach(region => {
-        const regionPrefix = region.code.substring(0, 2);
-        const regionId = `region-${region.code}`;
-
         const option = document.createElement("option");
-        option.className = "optRegion";
+        option.value = region.code.substring(0, 2); // sa value ng option nilalagay yung regionPrefix
         option.textContent = region.name;
-
-        const content = document.createElement("div");
-        content.className = "region-content";
-        content.id = regionId;
-
         regionsContainer.appendChild(option);
-        regionsContainer.appendChild(content);
-
-        option.addEventListener("click", () => {
-            document.querySelectorAll(".region-content").forEach(c => {
-                if (c !== content) c.classList.remove("show");
-            });
-
-            content.classList.toggle("show");
-            //chat gpt ginamit ko dito sa function na loadRegionUnits haha
-            if (!content.dataset.loaded) {
-                loadRegionUnits(regionPrefix, content);
-                
-            }
-        });
     });
 }
 
-
-//gumawa ng button ng mga provinces
-function loadRegionUnits(regionPrefix, container) {
-    container.innerHTML = "";
-
-    //MATCH THE PROVINCES BASED ON THE CODE. IE REGION I HAS 01XXXXXX, 
-    //EVERY PROVINCES UNDER REGION 1 ALSO HAS 01000 AT THE START
-    const matchedProvinces = provinces.filter(p =>
-        p.code.startsWith(regionPrefix)
-    );
-
-    const matchedCities = cities.filter(c =>
-        c.code.startsWith(regionPrefix)
-    );
-
-    const matchedMunicipalities = munuiciplaities.filter(m =>
-        m.code.startsWith(regionPrefix)
-    );
-
-    //PAGWALA
-    if (matchedProvinces.length === 0 && matchedCities.length === 0) {
-        container.innerHTML = "<p>No administrative units found.</p>";
-        return;
-    }
-
+//event listener pag iniba mo yung region
+regionsContainer.addEventListener("change", (e) => {
+    const regionPrefix = e.target.value; 
     
-    //ILAGAY NA SA SCREEN
-    if (matchedProvinces.length > 0 || regionPrefix == 13) {
-        matchedProvinces.forEach(p => {
-            const el = document.createElement("button");
-            el.textContent = p.name;
-            const provincePrefix = p.code.substring(0, 5)
-            el.addEventListener('click',() => {
-                getUniUnderRegion(regionPrefix, matchMuncipalities(provincePrefix), p.name)
-            })
-            container.appendChild(el);
-        })
-
-        //PARA SA NCR LANG TO KASI PURO CITY SILA
-        if(regionPrefix == 13) {
-            matchedCities.forEach(p => {
-                const el = document.createElement("button");
-                el.textContent = p.name;
-                el.addEventListener('click',() => {
-                    let cityName = [p.name.replace(/\b(City of|City)\b\s*/gi, '').trim()];
-                    getUniUnderRegion(regionPrefix, cityName)
-                })
-                container.appendChild(el);
-            });
-
-            //Para makuha yung pateros
-            matchedMunicipalities.forEach(p => {
-                const el = document.createElement("button");
-                el.textContent = p.name;
-                el.addEventListener('click',() => {
-                    let cityName = [p.name.replace(/\b(City of|City)\b\s*/gi, '').trim()];
-                    getUniUnderRegion(regionPrefix, cityName)
-                })
-                container.appendChild(el);
-            });
-        }
+    provinceContainer.innerHTML = '<option value="">Select Province</option>';
+    
+    if (regionPrefix) {
+        loadProvinceOptions(regionPrefix);
     }
-    container.dataset.loaded = "true";
+});
+
+//dropdown na rin yung province
+function loadProvinceOptions(regionPrefix) {
+    const matchedProvinces = provinces.filter(p => p.code.startsWith(regionPrefix));
+    
+    //para sa NCR region
+    if (regionPrefix === "13") {
+        const ncrUnits = [
+            ...cities.filter(c => c.code.startsWith(regionPrefix)),
+            ...munuiciplaities.filter(m => m.code.startsWith(regionPrefix))
+        ];
+        
+        ncrUnits.forEach(unit => {
+            const option = document.createElement("option");
+            option.value = unit.code;
+            option.textContent = unit.name.replace(/\b(City of|City)\b\s*/gi, '').trim();
+            provinceContainer.appendChild(option);
+        });
+    } else {
+        //para sa normal na province
+        matchedProvinces.forEach(p => {
+            const option = document.createElement("option");
+            option.value = p.code.substring(0, 5); 
+            option.textContent = p.name;
+            provinceContainer.appendChild(option);
+        });
+    }
 }
 
-function matchMuncipalities(prefix){
-    let matchedMuncipalities = []
-    munuiciplaities.forEach((a)=>{
-        if(a.code.startsWith(prefix)){
-            matchedMuncipalities.push(a.name.trim())
-        }
-    });
 
-    cities.forEach((a)=>{
-        if(a.code.startsWith(prefix)){
-            let cleaned = a.name.replace(/\b(City of|City)\b\s*/gi, '').trim();
-            matchedMuncipalities.push(cleaned)
-        }
-    });
 
-    matchedMuncipalities.sort((a, b) => a.toLowerCase().localeCompare(b.toLowerCase()));
-    return matchedMuncipalities
-}
+//--------------------------------------------------------------------------------------------------------------------
+
+//DI KO NA ALAM TO :<< pa help ako palabasin result sa div id = "universities"
+
+
 
 async function regUniArrayBuilder(ind){
     let response = await fetch(`https://en.wikipedia.org/w/api.php?action=parse&format=json&page=List of colleges and universities in the Philippines&prop=text&section=${ind}&disabletoc=1&origin=*`)

@@ -163,6 +163,9 @@ async function search(name) {
     return data.data.webPages.value[0].url
 }
 
+
+
+
 //take the index of proper region
 async function getIndex(name){
     switch(name){
@@ -181,6 +184,10 @@ async function getIndex(name){
     })
     return index
 }
+
+
+
+
 
 async function getColleges(municipalities, name){
     let ind = await getIndex(name);

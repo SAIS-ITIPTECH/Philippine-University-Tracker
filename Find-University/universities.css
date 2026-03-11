@@ -95,7 +95,7 @@ body{
 
 
 
-.regions{
+.filters{
     width: 25%;
     height: 90%;
     border: 1px solid rgb(255, 255, 255);
@@ -121,8 +121,7 @@ select option{
     text-transform: uppercase;
     text-wrap: initial;
 }
-select option:first-child{
-}
+
 
 .regions p{
     padding-left: 20px;
@@ -140,7 +139,11 @@ select option:first-child{
     padding: 10px;
 }
 
-
+.uniInfoContainer{
+    padding: 5px;
+    margin: 1px;
+    background-color: rgba(53, 255, 53, 0.51);
+}
 
 
 
