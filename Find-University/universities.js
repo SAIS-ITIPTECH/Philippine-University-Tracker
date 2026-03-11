@@ -7,11 +7,14 @@ let provinces = JSON.parse(localStorage.getItem("provinces"));
 let cities = JSON.parse(localStorage.getItem("cities"));
 let munuiciplaities = JSON.parse(localStorage.getItem("munuiciplaities"));
 let allUni = JSON.parse(localStorage.getItem("allUni"));
+let filter = localStorage.getItem("filter")
+
 
 buildRegions();
 
 //gumawa ng mga buttons ng region
 function buildRegions() {
+    console.log(filter + "received")
     regions.forEach(region => {
         const regionPrefix = region.code.substring(0, 2);
         const regionId = `region-${region.code}`;
@@ -75,7 +78,7 @@ function loadRegionUnits(regionPrefix, container) {
             el.textContent = p.name;
             const provincePrefix = p.code.substring(0, 5)
             el.addEventListener('click',() => {
-                getUniUnderRegion(regionPrefix, matchMuncipalities(provincePrefix))
+                getUniUnderRegion(regionPrefix, matchMuncipalities(provincePrefix), p.name)
             })
             container.appendChild(el);
         })
@@ -86,8 +89,7 @@ function loadRegionUnits(regionPrefix, container) {
                 const el = document.createElement("button");
                 el.textContent = p.name;
                 el.addEventListener('click',() => {
-                    let cityName = p.name;
-                    if(p.name == "City of Manila"){cityName = 'manila';}
+                    let cityName = [p.name.replace(/\b(City of|City)\b\s*/gi, '').trim()];
                     getUniUnderRegion(regionPrefix, cityName)
                 })
                 container.appendChild(el);
@@ -98,7 +100,8 @@ function loadRegionUnits(regionPrefix, container) {
                 const el = document.createElement("button");
                 el.textContent = p.name;
                 el.addEventListener('click',() => {
-                    getUniUnderRegion(regionPrefix, p.name)
+                    let cityName = [p.name.replace(/\b(City of|City)\b\s*/gi, '').trim()];
+                    getUniUnderRegion(regionPrefix, cityName)
                 })
                 container.appendChild(el);
             });
@@ -108,12 +111,21 @@ function loadRegionUnits(regionPrefix, container) {
 }
 
 function matchMuncipalities(prefix){
-    let matchedMuncipalities = ""
+    let matchedMuncipalities = []
     munuiciplaities.forEach((a)=>{
         if(a.code.startsWith(prefix)){
-            matchedMuncipalities += a.name + " "
+            matchedMuncipalities.push(a.name.trim())
         }
     });
+
+    cities.forEach((a)=>{
+        if(a.code.startsWith(prefix)){
+            let cleaned = a.name.replace(/\b(City of|City)\b\s*/gi, '').trim();
+            matchedMuncipalities.push(cleaned)
+        }
+    });
+
+    matchedMuncipalities.sort((a, b) => a.toLowerCase().localeCompare(b.toLowerCase()));
     return matchedMuncipalities
 }
 
@@ -151,90 +163,160 @@ async function regUniArrayBuilder(ind){
     return regUni
 }
 
+function uniSort(res){
+    res.sort((a, b) => {
+        let nameA = a.name.toLowerCase();
+        let nameB = b.name.toLowerCase();
 
-function getUniType(name){
-    if(new RegExp('university', "i").test(name)){
-        return "University"
-    }
-
-    else if(new RegExp('unibersidad', "i").test(name)){
-        return "University"
-    }
-
-    else if(new RegExp('universidad', "i").test(name)){
-        return "University"
-    }
-
-    else if(new RegExp('pamantasan', "i").test(name)){
-        return "University"
-    }
-    
-    else{
-        return "College"
-    }   
+        if (nameA < nameB) return -1;
+        if (nameA > nameB) return 1;
+        return 0;
+    });
+    return res
 }
 
-function getUniUnderRegion(regionCode, municipalities){
-    let results = []
-    allUni[regionCode].forEach((content) =>{
-        let plainLocation = content.location.match(/^([^,]+)/)//takes the municipality name. ie. rodriguez,rizal => rodriguez
-        plainLocation = plainLocation[1].replace('sta.', 'santa')  
-        plainLocation = plainLocation.replace('sto.', 'santo')       
-        let regexLocation = new RegExp(`\\b${plainLocation}\\b`, 'i')//make regex searching for municpality. ie. rodriguez rizal
-        
-        //for manila only, checks if uni is in manila
-        if (content.location.toLowerCase().includes(municipalities.toLowerCase())){
-            results.push(content)
-        }
-        //check if municpality is included to the list of municpality in a provinces. ie rodriguez in "rodriguez san mateo antipolo..."
-        else if(municipalities.match(regexLocation)){
-            results.push(content)
-        }
+async function search(name, loc) {
+    const query = `${name}, ${loc}, philippines official website'`
+    const url = 'https://api.langsearch.com/v1/web-search'
+
+    let response = await fetch(url, {
+        method: 'POST', 
+        headers: {
+            'Authorization' : 'Bearer sk-c399636d05c542a0b1e51e676bf89078', 
+            'Content-Type' : 'application/json'
+        },
+        body: JSON.stringify({
+        "query": query,
+        "freshness": "noLimit",
+        "summary": false,
+        "count": 5
+        })
     })
+    let data = await response.json();
+    console.log(data)
+    let keywords = [
+        "edu.ph",
+        "gov.ph",
+        "classmate.ph",
+        "wikipedia",
+        "noMatch"
+    ]
+
+    let uniUrl = ""
+    keywords.some(key => {
+        if(key == "noMatch"){
+            console.log(data.data.webPages.value[0].url)
+            uniUrl = data.data.webPages.value[0].url
+            return true
+        }
+
+        return data.data.webPages.value.some(url =>{
+            const regex = new RegExp(`\\b${key}\\b`, "i");
+            if(regex.test(url.url)){
+                console.log("matched!", url.url)
+                uniUrl = url.url
+                return true
+            }
+        })
+
+        }); 
+
+    return uniUrl
+}
+
+function getUniUnderRegion(regionCode, municipalities, province){
+    let results = []
+
+    console.log(municipalities)
+
+    municipalities.forEach(muni => {
+        results.push({})
+        results[results.length - 1]["regionName"] = muni
+        results[results.length - 1]["uni"] = []
+        allUni[regionCode].forEach((content) =>{
+            const regex = new RegExp(`\\b${muni}\\b`, "i");
+            if(regex.test(content.location)){
+                if(filter != "none"){
+                    console.log(content.location)
+                        if(filter == content.type.toLowerCase()) {
+                            console.log("filtered");
+                            results[results.length - 1]["uni"].push(content);
+                        }
+                    }
+                    else results[results.length - 1]["uni"].push(content);
+                }
+        });
+    });
    
-    
-    let uniName = [], uniLocation = [], uniType = [], uniInfo = [], uniWeb = [];
     const uniDisplay = document.getElementById("universities")
 
     //Remove the previouse result
     while (uniDisplay.firstChild){
         uniDisplay.removeChild(uniDisplay.firstChild);
     }
-
+    
     //Show results
-    for(let i = 0; i < results.length;i++){
-        //Create new container
-        uniInfo[i] = document.createElement('div');
-        uniInfo[i].className = 'uniInfoContainer';
-        uniDisplay.appendChild(uniInfo[i])
+        results.forEach(a => {
+        if(a['uni'].length == 0);
+        else{
+            let location;
+            if(province==undefined) location = a['regionName'];
+            else {
+                location = `${a['regionName']}, ${province}`
+                
+                uniTitle = document.createElement('Ttile');
+                uniTitle.className = 'muniTitle';
+                let title = a["regionName"].toUpperCase()
+                uniTitle.innerHTML = title
+                uniDisplay.append(uniTitle)
+            }
 
-        //Create new name
-        uniName[i] = document.createElement('p');
-        uniName[i].class = 'uniName';
-        uniName[i].innerHTML = `<b>${results[i]['name']}</b> `;
+            let uniSorted = uniSort(a["uni"])
+            uniSorted.forEach(res =>{
+                
+                displayUni(uniDisplay, res['name'], res['type'], `${location}`)
+            });
+        }
+    })
+}
 
-        //Create new typw
-        uniType[i] = document.createElement('p');
-        uniType[i].class = 'uniName';
-        uniType[i].innerHTML = `Type: ${results[i]['type']}`;
+function displayUni(uniDisplay, name, type, location){
+    //Create new name
+    uniInfo = document.createElement('div');
+    uniInfo.className = 'uniInfoContainer';
+    uniDisplay.appendChild(uniInfo)
 
-        //Create new location
-        uniLocation[i] = document.createElement('p')
-        uniLocation[i].class = 'uniLocation';
-        uniLocation[i].innerHTML = `Location: ${results[i]['location']}`;
+    uniName = document.createElement('p');
+    uniName.class = 'uniName';
+    uniName.innerHTML = `<b>${name}</b> `;
 
-        //Go to website button
-        uniWeb[i] = document.createElement('Button')
-        uniWeb[i].class = 'uniWebButton';
-        uniWeb[i].innerHTML = 'visit website';
-        uniWeb[i].addEventListener("click", async (event) => {
-            let url = await search(results[i]['name'])
-            window.open(url);
-        })
+    //Create new typw
+    uniType = document.createElement('p');
+    uniType.class = 'uniName';
+    uniType.innerHTML = `Type: ${type}`;
 
-        //Add name and location on container
-        uniInfo[i].append(uniName[i], uniType[i], uniLocation[i] , uniWeb[i])
-    }
+    //Create new location
+    uniLocation = document.createElement('p')
+    uniLocation.class = 'uniLocation';
+    uniLocation.innerHTML = `Location: ${location}`;
+
+    //Go to website button
+    uniWeb = document.createElement('Button')
+    uniWeb.class = 'uniWebButton';
+    uniWeb.innerHTML = 'visit website';
+    uniWeb.addEventListener("click", async () => {
+        let url = await search(name, location)
+        window.open(url);
+    })
+
+    uniMap = document.createElement('Button')
+    uniMap.class = 'uniWebButton';
+    uniMap.innerHTML = 'see on maps';
+    uniMap.addEventListener("click",  () => window.open(`https://www.google.com/maps/search/${name}, ${location}`))
+
+    //Add name and location on container
+    uniInfo.append(uniName, uniType, uniLocation , uniWeb, uniMap)
+    
 }
 
 
