@@ -1,13 +1,11 @@
 import { search } from "../SearchAPI/search.js";
 
 let allUni= JSON.parse(localStorage.getItem("allUni"));
-let title = document.getElementById("title")
 console.log(allUni)
 
 searchUniversity()
 
 function searchUniversity(){
-    title.innerHTML = "Results for: "
     let querry = localStorage.getItem("querry")
 
     let results = []
@@ -36,44 +34,66 @@ function typeIdentifier(type){
     return results
 }
 
-function displayResults(results){
+
+function displayResults(results, uniDisplay, name, type, location){
     results.forEach(content =>{
-    const container = document.getElementById("container")
+        
+        const uniDisplay = document.getElementById("universities");
+
         //Create new container
         let uniInfo = document.createElement('div');
         uniInfo.className = 'uniInfoContainer';
-        container.appendChild(uniInfo)
+        uniDisplay.appendChild(uniInfo);
+
+        let topRow = document.createElement('div');
+        topRow.className = 'uniTopRow'; 
 
         //Create new name
         let uniName = document.createElement('p');
-        uniName.class = 'uniName';
-        uniName.innerHTML = `<b>${content['name']}</b> `;
+        uniName.className = 'uniName';
+        uniName.innerHTML = `${content['name']}`;
 
-        //Create new typw
-        let uniType = document.createElement('p');
-        uniType.class = 'uniName';
-        uniType.innerHTML = `Type: ${content['type']}`;
+        let buttonGroup = document.createElement('div');
+        buttonGroup.className = 'uniButtonGroup';
+
+        let uniWeb = document.createElement('button');
+        uniWeb.className = 'uniWebButton';
+        uniWeb.innerHTML = 'visit website';
+        uniWeb.addEventListener("click", async () => {
+            let url = await search(name, location);
+            window.open(url);
+        });
+
+        let uniMap = document.createElement('button');
+        uniMap.className = 'uniWebButton';
+        uniMap.innerHTML = 'see on maps';
+        uniMap.addEventListener("click", () => window.open(`https://www.google.com/maps/search/${name}, ${location}`));
+
+        buttonGroup.append(uniWeb, uniMap);
+        topRow.append(uniName, buttonGroup);
+
+        let bottomRow = document.createElement('div');
+        bottomRow.className = 'uniBottomRow';
 
         //Create new location
-        let uniLocation = document.createElement('p')
-        uniLocation.class = 'uniLocation';
-        uniLocation.innerHTML = `Location: ${content['location']}`;
+        let uniType = document.createElement('p');
+        uniType.className = 'uniType';
+        uniType.innerHTML = `Type: <strong>${content['type']}</strong>`;
+
+        let uniLocation = document.createElement('p');
+        uniLocation.className = 'uniLocation';
+        uniLocation.innerHTML = `Location: <strong>${content['location']}</strong>`;
 
         //Go to website button
-        let uniWeb = document.createElement('Button')
-        uniWeb.class = 'uniWebButton';
-        uniWeb.innerHTML = 'visit website';
-        uniWeb.addEventListener("click", async (event) => {
-            let url = await search(content['name'])
-            window.open(url);
-        })
+        
 
-        let uniMap = document.createElement('Button')
-        uniMap.class = 'uniWebButton';
+        let uniMap = document.createElement('button');
+        uniMap.className = 'uniWebButton';
         uniMap.innerHTML = 'see on maps';
-        uniMap.addEventListener("click",  () => window.open(`https://www.google.com/maps/search/${name}, ${location}`))
+        uniMap.addEventListener("click", () => window.open(`https://www.google.com/maps/search/${name}, ${location}`));
 
-        //Add name and location on container
-        uniInfo.append(uniName, uniType, uniLocation , uniWeb, )
+        bottomRow.append(uniType, uniLocation);
+
+        uniInfo.append(topRow, bottomRow);
     });
 }

@@ -15,7 +15,7 @@ buildRegions();
 // hinsdi na buttons gagawin nya, option na sa regions selection
 function buildRegions() {
     console.log(1)
-    regionsContainer.innerHTML = '<option value="">Select Region</option>';
+    regionsContainer.innerHTML = '<option value="">Select Region </option>';
 
     regions.forEach(region => {
         const option = document.createElement("option");
@@ -115,99 +115,241 @@ function uniSort(res){
     return res
 }
 
-function getUniUnderRegion(regionCode, municipalities, province){
-    let results = []
+let currentPage = 1;
+const itemsPerPage = 8;
+let filteredUniList = []; // This will hold all matching unis before slicing
 
-    console.log(municipalities)
-
-    municipalities.forEach(muni => {
-        results.push({})
-        results[results.length - 1]["regionName"] = muni
-        results[results.length - 1]["uni"] = []
-        allUni[regionCode].forEach((content) =>{
-            const regex = new RegExp(`\\b${muni}\\b`, "i");
-            if(regex.test(content.location)){
-                if(filter != "none"){
-                    console.log(content.location)
-                        if(filter == content.type.toLowerCase()) {
-                            console.log("filtered");
-                            results[results.length - 1]["uni"].push(content);
-                        }
-                    }
-                    else results[results.length - 1]["uni"].push(content);
-                }
-        });
-    });
-   
-    const uniDisplay = document.getElementById("universities")
-
-    //Remove the previouse result
-    while (uniDisplay.firstChild){
-        uniDisplay.removeChild(uniDisplay.firstChild);
-    }
+// Modify your getUniUnderRegion function
+function getUniUnderRegion(regionCode, municipalities, province) {
+    filteredUniList = []; // Reset the master list
     
-    //Show results
-        results.forEach(a => {
-        if(a['uni'].length == 0);
-        else{
-            let location;
-            if(province==undefined) location = a['regionName'];
-            else {
-                location = `${a['regionName']}, ${province}`
-                
-                let uniTitle = document.createElement('Ttile');
-                uniTitle.className = 'muniTitle';
-                let title = a["regionName"].toUpperCase()
-                uniTitle.innerHTML = title
-                uniDisplay.append(uniTitle)
-            }
-
-            let uniSorted = uniSort(a["uni"])
-            uniSorted.forEach(res =>{
-                
-                displayUni(uniDisplay, res['name'], res['type'], `${location}`)
+    municipalities.forEach(muni => {
+        if (allUni[regionCode]) {
+            allUni[regionCode].forEach((content) => {
+                const regex = new RegExp(`\\b${muni}\\b`, "i");
+                if (regex.test(content.location)) {
+                    // Apply filtering logic
+                    if (filter === "none" || filter === content.type.toLowerCase()) {
+                        // Store uni with its calculated location for display
+                        const displayLocation = province ? `${muni}, ${province}` : muni;
+                        filteredUniList.push({ ...content, displayLocation });
+                    }
+                }
             });
         }
-    })
+    });
+
+    // Sort the entire list once
+    filteredUniList = uniSort(filteredUniList);
+    
+    // Reset to page 1 and render
+    currentPage = 1;
+    renderPagedResults();
 }
 
-function displayUni(uniDisplay, name, type, location){
-    //Create new name
+function renderPagedResults() {
+    const uniDisplay = document.getElementById("universities");
+    const paginationDisplay = document.getElementById("pagination");
+    uniDisplay.innerHTML = "";
+    paginationDisplay.innerHTML = "";
+
+    if (filteredUniList.length === 0) {
+        uniDisplay.innerHTML = "<p>No universities found.</p>";
+        return;
+    }
+
+    // Calculate Slice
+    const start = (currentPage - 1) * itemsPerPage;
+    const end = start + itemsPerPage;
+    const paginatedItems = filteredUniList.slice(start, end);
+
+    // Display the 10 items
+    paginatedItems.forEach(res => {
+        displayUni(uniDisplay, res.name, res.type, res.displayLocation);
+    });
+
+    paginatedItems.forEach(res => {
+        displayResults(uniDisplay, res.name, res.type, res.displayLocation);
+    });
+
+
+    buildPaginationControls(filteredUniList.length);
+}
+
+function buildPaginationControls(totalItems) {
+    const paginationDisplay = document.getElementById("pagination");
+    const totalPages = Math.ceil(totalItems / itemsPerPage);
+    
+    if (totalPages <= 1) return;
+
+    const createBtn = (label, targetPage, active = false, disabled = false) => {
+        const btn = document.createElement("button");
+        btn.textContent = label;
+        btn.className = `pag-btn ${active ? 'active' : ''}`;
+        if (disabled) btn.disabled = true;
+        btn.addEventListener("click", () => {
+            currentPage = targetPage;
+            renderPagedResults();
+            document.getElementById("universities").scrollTop = 0;
+        });
+        return btn;
+    };
+
+    // START & PREV
+    paginationDisplay.appendChild(createBtn("START", 1, false, currentPage === 1));
+    paginationDisplay.appendChild(createBtn("PREV", currentPage - 1, false, currentPage === 1));
+
+    // Page Numbers (Showing a max of 5 numbers for cleanliness)
+    let startPage = Math.max(1, currentPage - 2);
+    let endPage = Math.min(totalPages, startPage + 4);
+    if (endPage - startPage < 4) startPage = Math.max(1, endPage - 4);
+
+    for (let i = startPage; i <= endPage; i++) {
+        paginationDisplay.appendChild(createBtn(i, i, i === currentPage));
+    }
+
+    // NEXT & END
+    paginationDisplay.appendChild(createBtn("NEXT", currentPage + 1, false, currentPage === totalPages));
+    paginationDisplay.appendChild(createBtn("END", totalPages, false, currentPage === totalPages));
+}
+
+//displayer sa div universities ng universities 
+//NAKA FORMAT MAG SABI PO IF MAY IAADD TEYKYU
+
+function displayUni(uniDisplay, name, type, location) {
+
     let uniInfo = document.createElement('div');
     uniInfo.className = 'uniInfoContainer';
-    uniDisplay.appendChild(uniInfo)
+    uniDisplay.appendChild(uniInfo);
+
+    let topRow = document.createElement('div');
+    topRow.className = 'uniTopRow';
 
     let uniName = document.createElement('p');
-    uniName.class = 'uniName';
-    uniName.innerHTML = `<b>${name}</b> `;
+    uniName.className = 'uniName';
+    uniName.innerHTML = `${name}`;
 
-    //Create new typw
-    let uniType = document.createElement('p');
-    uniType.class = 'uniName';
-    uniType.innerHTML = `Type: ${type}`;
+    let buttonGroup = document.createElement('div');
+    buttonGroup.className = 'uniButtonGroup';
 
-    //Create new location
-    let uniLocation = document.createElement('p')
-    uniLocation.class = 'uniLocation';
-    uniLocation.innerHTML = `Location: ${location}`;
-
-    //Go to website button
-    let uniWeb = document.createElement('Button')
-    uniWeb.class = 'uniWebButton';
+    let uniWeb = document.createElement('button');
+    uniWeb.className = 'uniWebButton';
     uniWeb.innerHTML = 'visit website';
     uniWeb.addEventListener("click", async () => {
-        let url = await search(name, location)
+        let url = await search(name, location);
         window.open(url);
-    })
+    });
 
-    let uniMap = document.createElement('Button')
-    uniMap.class = 'uniWebButton';
+    let uniMap = document.createElement('button');
+    uniMap.className = 'uniWebButton';
     uniMap.innerHTML = 'see on maps';
-    uniMap.addEventListener("click",  () => window.open(`https://www.google.com/maps/search/${name}, ${location}`))
+    uniMap.addEventListener("click", () => window.open(`https://www.google.com/maps/search/${name}, ${location}`));
 
-    //Add name and location on container
-    uniInfo.append(uniName, uniType, uniLocation , uniWeb, uniMap)
-     
+    buttonGroup.append(uniWeb, uniMap);
+    topRow.append(uniName, buttonGroup);
+
+    let bottomRow = document.createElement('div');
+    bottomRow.className = 'uniBottomRow';
+
+    let uniType = document.createElement('p');
+    uniType.className = 'uniType';
+    uniType.innerHTML = `Type: <strong>${type}</strong>`;
+
+    let uniLocation = document.createElement('p');
+    uniLocation.className = 'uniLocation';
+    uniLocation.innerHTML = `Location: <strong>${location}</strong>`;
+
+    bottomRow.append(uniType, uniLocation);
+
+    uniInfo.append(topRow, bottomRow);
 }
 
 
+searchUniversity()
+
+function searchUniversity(){
+    let querry = localStorage.getItem("querry")
+
+    let results = []
+    Object.values(allUni).forEach((a) =>{
+        for(let i = 0; i< a.length; i++){
+            if(new RegExp(querry, "i").test(a[i].name)){
+                results.push(a[i])
+            }
+        }
+    });
+    
+    displayResults(results)
+}
+
+function typeIdentifier(type){
+    let results = []
+    let total = 0
+    Object.values(allUni).forEach((a) =>{
+        for(let i = 0; i< a.length; i++){
+            if(a[i].type.toLowerCase() == type.toLowerCase()){
+                results.push(a[i])
+            }
+        }
+        
+    });
+    return results
+}
+
+
+
+function displayResults(results, name, location){
+    results.forEach(content =>{
+        
+        const uniDisplay = document.getElementById("universities");
+
+        //Create new container
+        let uniInfo = document.createElement('div');
+        uniInfo.className = 'uniInfoContainer';
+        uniDisplay.appendChild(uniInfo);
+
+        let topRow = document.createElement('div');
+        topRow.className = 'uniTopRow'; 
+
+        //Create new name
+        let uniName = document.createElement('p');
+        uniName.className = 'uniName';
+        uniName.innerHTML = `${content['name']}`;
+
+        let buttonGroup = document.createElement('div');
+        buttonGroup.className = 'uniButtonGroup';
+
+        let uniWeb = document.createElement('button');
+        uniWeb.className = 'uniWebButton';
+        uniWeb.innerHTML = 'visit website';
+        uniWeb.addEventListener("click", async () => {
+            let url = await search(name, location);
+            window.open(url);
+        });
+
+        let uniMap = document.createElement('button');
+        uniMap.className = 'uniWebButton';
+        uniMap.innerHTML = 'see on maps';
+        uniMap.addEventListener("click", () => window.open(`https://www.google.com/maps/search/${name}, ${location}`));
+
+        buttonGroup.append(uniWeb, uniMap);
+        topRow.append(uniName, buttonGroup);
+
+        let bottomRow = document.createElement('div');
+        bottomRow.className = 'uniBottomRow';
+
+        //Create new location
+        let uniType = document.createElement('p');
+        uniType.className = 'uniType';
+        uniType.innerHTML = `Type: <strong>${content['type']}</strong>`;
+
+        let uniLocation = document.createElement('p');
+        uniLocation.className = 'uniLocation';
+        uniLocation.innerHTML = `Location: <strong>${content['location']}</strong>`;
+
+
+        bottomRow.append(uniType, uniLocation);
+
+        uniInfo.append(topRow, bottomRow);
+    });
+}

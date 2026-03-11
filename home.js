@@ -169,7 +169,7 @@ document.getElementById("searchIcon").addEventListener("click", ()=>{
     localStorage.setItem("allUni", JSON.stringify(allUni))
     console.log(document.getElementById("querry").value)
     localStorage.setItem("querry", document.getElementById("querry").value)
-    window.location.href = "Results/index.html";
+    window.location.href = "Find-University/index.html";
 })
 
 const filteredButtons = document.querySelectorAll(".filtered"); // select all elements with class
