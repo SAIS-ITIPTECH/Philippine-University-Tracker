@@ -15,7 +15,8 @@ if(localStorage.getItem("source") == "findUni"){
 }
 
 // hinsdi na buttons gagawin nya, option na sa regions selection
-function buildRegions(){
+function buildRegions() {
+
     regionsContainer.innerHTML = '<option value="">Select Region</option>';
 
     regions.forEach(region => {
