@@ -68,7 +68,7 @@ function loadProvinceOptions(regionPrefix) {
 
 //--------------------------------------------------------------------------------------------------------------------
 
-//DI KO NA ALAM TO :<< pa help ako palabasin result sa div id = "universities"
+//DI KO NA ALAM TO :<< pa help ako palabasin result ng mga universities sa div id = "universities"
 
 
 
