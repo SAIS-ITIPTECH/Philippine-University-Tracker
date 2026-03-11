@@ -13,8 +13,7 @@ let filter = localStorage.getItem("filter")
 buildRegions();
 
 // hinsdi na buttons gagawin nya, option na sa regions selection
-function buildRegions() {
-
+function buildRegions(){
     regionsContainer.innerHTML = '<option value="">Select Region</option>';
 
     regions.forEach(region => {
@@ -53,6 +52,12 @@ function loadProvinceOptions(regionPrefix) {
             option.textContent = unit.name.replace(/\b(City of|City)\b\s*/gi, '').trim();
             provinceContainer.appendChild(option);
         });
+
+        provinceContainer.addEventListener("change", function() {
+            const text = this.options[this.selectedIndex].text;
+            getUniUnderRegion(regionPrefix, [text])
+        });
+
     } else {
         //para sa normal na province
         matchedProvinces.forEach(p => {
@@ -61,7 +66,33 @@ function loadProvinceOptions(regionPrefix) {
             option.textContent = p.name;
             provinceContainer.appendChild(option);
         });
+
+        provinceContainer.addEventListener("change", function() {
+            provinceContainer.value = this.options[this.selectedIndex].value
+            const text = this.options[this.selectedIndex].text;
+            getUniUnderRegion(regionPrefix, matchMuncipalities(provinceContainer.value), text)
+        });
     }
+}
+
+function matchMuncipalities(prefix){
+    let matchedMuncipalities = []
+    munuiciplaities.forEach((a)=>{
+        if(a.code.startsWith(prefix)){
+            matchedMuncipalities.push(a.name.trim())
+        }
+    });
+
+    cities.forEach((a)=>{
+        if(a.code.startsWith(prefix)){
+            let cleaned = a.name.replace(/\b(City of|City)\b\s*/gi, '').trim();
+            matchedMuncipalities.push(cleaned)
+        }
+    });
+
+    matchedMuncipalities.sort((a, b) => a.toLowerCase().localeCompare(b.toLowerCase()));
+    console.log(matchedMuncipalities)
+    return matchedMuncipalities
 }
 
 
@@ -191,6 +222,7 @@ function getUniUnderRegion(regionCode, municipalities, province){
         });
     });
    
+    console.log(results)
     const uniDisplay = document.getElementById("universities")
 
     //Remove the previouse result
