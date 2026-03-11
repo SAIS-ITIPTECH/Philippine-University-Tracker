@@ -74,6 +74,6 @@ function displayResults(results){
         uniMap.addEventListener("click",  () => window.open(`https://www.google.com/maps/search/${name}, ${location}`))
 
         //Add name and location on container
-        uniInfo.append(uniName, uniType, uniLocation , uniWeb, uniMap)
+        uniInfo.append(uniName, uniType, uniLocation , uniWeb, )
     });
 }

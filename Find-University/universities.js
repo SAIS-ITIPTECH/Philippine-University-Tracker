@@ -8,15 +8,13 @@ let cities = JSON.parse(localStorage.getItem("cities"));
 let munuiciplaities = JSON.parse(localStorage.getItem("munuiciplaities"));
 let allUni = JSON.parse(localStorage.getItem("allUni"));
 let filter = localStorage.getItem("filter")
+console.log(1)
 
-
-if(localStorage.getItem("source") == "findUni"){
-    buildRegions();
-}
+buildRegions();
 
 // hinsdi na buttons gagawin nya, option na sa regions selection
 function buildRegions() {
-
+    console.log(1)
     regionsContainer.innerHTML = '<option value="">Select Region</option>';
 
     regions.forEach(region => {
@@ -209,7 +207,7 @@ function displayUni(uniDisplay, name, type, location){
 
     //Add name and location on container
     uniInfo.append(uniName, uniType, uniLocation , uniWeb, uniMap)
-    
+     
 }
 
 
