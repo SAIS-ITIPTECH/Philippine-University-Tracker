@@ -152,7 +152,6 @@ function getUniUnderRegion(regionCode, municipalities){
 }
 
 function findUniversity(){
-    console.log("clikeda")
     localStorage.setItem("regions", JSON.stringify(regions))
     localStorage.setItem("provinces", JSON.stringify(provinces))
     localStorage.setItem("munuiciplaities", JSON.stringify(munuiciplaities))
@@ -168,6 +167,7 @@ document.getElementById("find").addEventListener("click", ()=>{
 
 document.getElementById("searchIcon").addEventListener("click", ()=>{
     localStorage.setItem("allUni", JSON.stringify(allUni))
+    console.log(document.getElementById("querry").value)
     localStorage.setItem("querry", document.getElementById("querry").value)
     window.location.href = "Results/index.html";
 })

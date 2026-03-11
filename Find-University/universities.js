@@ -1,6 +1,6 @@
 const regionsContainer = document.getElementById("regionsContainer");
 const provinceContainer = document.getElementById("provinceContainer");
-
+import { search } from "../SearchAPI/search.js";
 
 let regions = JSON.parse(localStorage.getItem("regions"));
 let provinces = JSON.parse(localStorage.getItem("provinces"));
@@ -10,7 +10,9 @@ let allUni = JSON.parse(localStorage.getItem("allUni"));
 let filter = localStorage.getItem("filter")
 
 
-buildRegions();
+if(localStorage.getItem("source") == "findUni"){
+    buildRegions();
+}
 
 // hinsdi na buttons gagawin nya, option na sa regions selection
 function buildRegions(){
@@ -102,41 +104,6 @@ function matchMuncipalities(prefix){
 //DI KO NA ALAM TO :<< pa help ako palabasin result ng mga universities sa div id = "universities"
 
 
-
-async function regUniArrayBuilder(ind){
-    let response = await fetch(`https://en.wikipedia.org/w/api.php?action=parse&format=json&page=List of colleges and universities in the Philippines&prop=text&section=${ind}&disabletoc=1&origin=*`)
-    let data = await response.json()
-    const parser = new DOMParser();
-    const doc = parser.parseFromString(data.parse.text["*"], "text/html");
-    const rows = doc.querySelectorAll("table.wikitable tbody tr");
-
-    let regUni = []
-    rows.forEach((row, index) => {
-        if (index === 0) return;
-        const cells = row.querySelectorAll("td");
-
-        let name
-        let location
-        let type
-
-        // For Public Schools
-        if (cells.length == 6){
-            name = cells[0].innerText.trim();
-            location = cells[2].innerText.trim();//location info from wiki. ie. rodriguez, rizal
-            type = getUniType(name)
-            regUni.push({name, location, type})
-        }
-
-        else if (cells.length == 5){
-            name = cells[0].innerText.trim();
-            location = cells[1].innerText.trim();//location info from wiki. ie. rodriguez, rizal
-            type = getUniType(name)
-            regUni.push({name, location, type})
-        }
-    });
-    return regUni
-}
-
 function uniSort(res){
     res.sort((a, b) => {
         let nameA = a.name.toLowerCase();
@@ -147,55 +114,6 @@ function uniSort(res){
         return 0;
     });
     return res
-}
-
-async function search(name, loc) {
-    const query = `${name}, ${loc}, philippines official website'`
-    const url = 'https://api.langsearch.com/v1/web-search'
-
-    let response = await fetch(url, {
-        method: 'POST', 
-        headers: {
-            'Authorization' : 'Bearer sk-c399636d05c542a0b1e51e676bf89078', 
-            'Content-Type' : 'application/json'
-        },
-        body: JSON.stringify({
-        "query": query,
-        "freshness": "noLimit",
-        "summary": false,
-        "count": 5
-        })
-    })
-    let data = await response.json();
-    console.log(data)
-    let keywords = [
-        "edu.ph",
-        "gov.ph",
-        "classmate.ph",
-        "wikipedia",
-        "noMatch"
-    ]
-
-    let uniUrl = ""
-    keywords.some(key => {
-        if(key == "noMatch"){
-            console.log(data.data.webPages.value[0].url)
-            uniUrl = data.data.webPages.value[0].url
-            return true
-        }
-
-        return data.data.webPages.value.some(url =>{
-            const regex = new RegExp(`\\b${key}\\b`, "i");
-            if(regex.test(url.url)){
-                console.log("matched!", url.url)
-                uniUrl = url.url
-                return true
-            }
-        })
-
-        }); 
-
-    return uniUrl
 }
 
 function getUniUnderRegion(regionCode, municipalities, province){
@@ -222,7 +140,6 @@ function getUniUnderRegion(regionCode, municipalities, province){
         });
     });
    
-    console.log(results)
     const uniDisplay = document.getElementById("universities")
 
     //Remove the previouse result
@@ -239,7 +156,7 @@ function getUniUnderRegion(regionCode, municipalities, province){
             else {
                 location = `${a['regionName']}, ${province}`
                 
-                uniTitle = document.createElement('Ttile');
+                let uniTitle = document.createElement('Ttile');
                 uniTitle.className = 'muniTitle';
                 let title = a["regionName"].toUpperCase()
                 uniTitle.innerHTML = title
@@ -257,26 +174,26 @@ function getUniUnderRegion(regionCode, municipalities, province){
 
 function displayUni(uniDisplay, name, type, location){
     //Create new name
-    uniInfo = document.createElement('div');
+    let uniInfo = document.createElement('div');
     uniInfo.className = 'uniInfoContainer';
     uniDisplay.appendChild(uniInfo)
 
-    uniName = document.createElement('p');
+    let uniName = document.createElement('p');
     uniName.class = 'uniName';
     uniName.innerHTML = `<b>${name}</b> `;
 
     //Create new typw
-    uniType = document.createElement('p');
+    let uniType = document.createElement('p');
     uniType.class = 'uniName';
     uniType.innerHTML = `Type: ${type}`;
 
     //Create new location
-    uniLocation = document.createElement('p')
+    let uniLocation = document.createElement('p')
     uniLocation.class = 'uniLocation';
     uniLocation.innerHTML = `Location: ${location}`;
 
     //Go to website button
-    uniWeb = document.createElement('Button')
+    let uniWeb = document.createElement('Button')
     uniWeb.class = 'uniWebButton';
     uniWeb.innerHTML = 'visit website';
     uniWeb.addEventListener("click", async () => {
@@ -284,7 +201,7 @@ function displayUni(uniDisplay, name, type, location){
         window.open(url);
     })
 
-    uniMap = document.createElement('Button')
+    let uniMap = document.createElement('Button')
     uniMap.class = 'uniWebButton';
     uniMap.innerHTML = 'see on maps';
     uniMap.addEventListener("click",  () => window.open(`https://www.google.com/maps/search/${name}, ${location}`))
