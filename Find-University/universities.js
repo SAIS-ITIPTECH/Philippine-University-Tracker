@@ -1,265 +1,228 @@
 const regionsContainer = document.getElementById("regionsContainer");
-const provinceContainer = document.getElementById("provinceContainer");
 
+let regions = [];
+let provinces = [];
+let cities = [];
+let munuiciplaities = [];
+//kinuha ko ulit kulang yung nakukuha sa niversity ee
+Promise.all([
+    fetch("https://psgc.cloud/api/regions").then(res => res.json()),
+    fetch("https://psgc.cloud/api/provinces").then(res => res.json()),
+    fetch("https://psgc.cloud/api/cities").then(res => res.json()),
+    fetch("https://psgc.cloud/api/municipalities").then(res => res.json())
+])
+.then(([r, p, c, m]) => {
+    regions = r;
+    provinces = p;
+    cities = c;
+    munuiciplaities = m;
+    buildRegions();
+})
+.catch(err => {
+    regionsContainer.innerHTML = "<p>Error loading PSGC data.</p>";
+    console.error(err);
+});
 
-let regions = JSON.parse(localStorage.getItem("regions"));
-let provinces = JSON.parse(localStorage.getItem("provinces"));
-let cities = JSON.parse(localStorage.getItem("cities"));
-let munuiciplaities = JSON.parse(localStorage.getItem("munuiciplaities"));
-let allUni = JSON.parse(localStorage.getItem("allUni"));
-let filter = localStorage.getItem("filter")
-
-
-buildRegions();
-
-// hinsdi na buttons gagawin nya, option na sa regions selection
 function buildRegions() {
-
-    regionsContainer.innerHTML = '<option value="">Select Region</option>';
-
     regions.forEach(region => {
-        const option = document.createElement("option");
-        option.value = region.code.substring(0, 2); // sa value ng option nilalagay yung regionPrefix
-        option.textContent = region.name;
-        regionsContainer.appendChild(option);
+        const regionPrefix = region.code.substring(0, 2);
+
+        const button = document.createElement("button");
+        button.className = "region-btn";
+        button.textContent = region.name;
+
+        const content = document.createElement("div");
+        content.className = "region-content";
+
+        regionsContainer.appendChild(button);
+        regionsContainer.appendChild(content);
+
+        button.addEventListener("click", () => {
+            document.querySelectorAll(".region-content").forEach(c => {
+                if (c !== content) c.classList.remove("show");
+            });
+            content.classList.toggle("show");
+
+            if (!content.dataset.loaded) {
+                loadRegionUnits(regionPrefix, content, region.name);
+            }
+        });
     });
 }
 
-//event listener pag iniba mo yung region
-regionsContainer.addEventListener("change", (e) => {
-    const regionPrefix = e.target.value; 
-    
-    provinceContainer.innerHTML = '<option value="">Select Province</option>';
-    
-    if (regionPrefix) {
-        loadProvinceOptions(regionPrefix);
-    }
-});
+function loadRegionUnits(prefix, container, regionName) {
+    container.innerHTML = "";
 
-//dropdown na rin yung province
-function loadProvinceOptions(regionPrefix) {
-    const matchedProvinces = provinces.filter(p => p.code.startsWith(regionPrefix));
-    
-    //para sa NCR region
-    if (regionPrefix === "13") {
-        const ncrUnits = [
-            ...cities.filter(c => c.code.startsWith(regionPrefix)),
-            ...munuiciplaities.filter(m => m.code.startsWith(regionPrefix))
-        ];
-        
-        ncrUnits.forEach(unit => {
-            const option = document.createElement("option");
-            option.value = unit.code;
-            option.textContent = unit.name.replace(/\b(City of|City)\b\s*/gi, '').trim();
-            provinceContainer.appendChild(option);
-        });
-    } else {
-        //para sa normal na province
-        matchedProvinces.forEach(p => {
-            const option = document.createElement("option");
-            option.value = p.code.substring(0, 5); 
-            option.textContent = p.name;
-            provinceContainer.appendChild(option);
-        });
+    const matchedProvinces = provinces.filter(p => p.code.startsWith(prefix));
+    const matchedCities = cities.filter(c => c.code.startsWith(prefix));
+    const matchedMunicipalities = munuiciplaities.filter(m => m.code.startsWith(prefix));
+
+    if (matchedProvinces.length === 0 && matchedCities.length === 0) {
+        container.innerHTML = "<p>No administrative units found.</p>";
+        return;
     }
+
+    if (matchedProvinces.length > 0 || prefix == 13) {
+        const title = document.createElement("p");
+        title.innerHTML = "<strong>Provinces</strong>";
+        container.appendChild(title);
+
+        matchedProvinces.forEach(p => {
+            const el = document.createElement("button");
+            el.textContent = p.name;
+            const provincePrefix = p.code.substring(0, 5);
+            el.addEventListener('click', () => {
+                getColleges(matchMuncipalities(provincePrefix), regionName);
+            });
+            container.appendChild(el);
+        });
+
+        if (prefix == 13) { 
+            matchedCities.forEach(p => {
+                const el = document.createElement("button");
+                el.textContent = p.name;
+                el.addEventListener('click', () => {
+                    let cityName = p.name;
+                    if (p.name == "City of Manila") cityName = 'manila';
+                    getColleges(cityName, regionName);
+                });
+                container.appendChild(el);
+            });
+
+            matchedMunicipalities.forEach(p => {
+                const el = document.createElement("button");
+                el.textContent = p.name;
+                const provincePrefix = p.code.substring(0, 5);
+                el.addEventListener('click', () => {
+                    getColleges(matchMuncipalities(provincePrefix), regionName);
+                });
+                container.appendChild(el);
+            });
+        }
+    }
+
+    container.dataset.loaded = "true";
+}
+
+function matchMuncipalities(prefix) {
+    let matchedMuncipalities = "";
+    munuiciplaities.forEach(a => {
+        if (a.code.startsWith(prefix)) {
+            matchedMuncipalities += a.name + " ";
+        }
+    });
+    return matchedMuncipalities;
+}
+
+async function search(name) {
+    const query = name + ' philippines official website';
+    const url = 'https://api.langsearch.com/v1/web-search';
+
+    let response = await fetch(url, {
+        method: 'POST',
+        headers: {
+            'Authorization': 'Bearer sk-c399636d05c542a0b1e51e676bf89078',
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            "query": query,
+            "freshness": "onLimit",
+            "summary": true,
+            "count": 1
+        })
+    });
+    let data = await response.json();
+    return data.data.webPages.value[0].url;
+}
+
+async function getIndex(name) {
+    switch(name){
+        case "National Capital region (NCR)": return 37;
+        case "Cordillera Administrative Region (CAR)": return 40;
+    }
+    let response = await fetch(`https://en.wikipedia.org/w/api.php?action=parse&format=json&page=List of colleges and universities in the Philippines&prop=sections&disabletoc=1&origin=*`);
+    let data = await response.json();
+    let index;
+    data.parse.sections.forEach(function(a){
+        if(name.toLowerCase().match(a.line.toLowerCase())){
+            index = a.index;
+        }
+    });
+    return index;
+}
+
+async function getColleges(municipalities, name) {
+    let ind = await getIndex(name);
+    let response = await fetch(`https://en.wikipedia.org/w/api.php?action=parse&format=json&page=List of colleges and universities in the Philippines&prop=text&section=${ind}&disabletoc=1&origin=*`);
+    let data = await response.json();
+    let universities = await getCollegesNames(municipalities, data);
+
+    const uniDisplay = document.getElementById("universities");
+    while (uniDisplay.firstChild) uniDisplay.removeChild(uniDisplay.firstChild);
+
+    universities.forEach(u => {
+        const uniInfo = document.createElement('div');
+        uniInfo.className = 'uniInfoContainer';
+
+        const uniName = document.createElement('p');
+        uniName.innerHTML = `<b>${u.name}</b>`;
+
+        const uniLocation = document.createElement('p');
+        uniLocation.innerHTML = `Location: ${u.location}`;
+
+        const uniWeb = document.createElement('button');
+        uniWeb.className = 'uniWebButton';
+        uniWeb.innerHTML = 'Visit Website';
+        uniWeb.addEventListener("click", async () => {
+            let url = await search(u.name);
+            window.open(url);
+        });
+
+        const uniMap = document.createElement('button');
+        uniMap.className = 'uniWebButton';
+        uniMap.innerHTML = 'View Map';
+        uniMap.addEventListener("click", () => {
+            const mapUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(u.name + ", " + u.location)}`;
+            window.open(mapUrl, '_blank');
+        });
+
+        const buttonGroup = document.createElement('div');
+        buttonGroup.className = 'uniButtonGroup';
+        buttonGroup.append(uniWeb, uniMap);
+
+        uniInfo.append(uniName, uniLocation, buttonGroup);
+        uniDisplay.appendChild(uniInfo);
+    });
 }
 
 
-
-//--------------------------------------------------------------------------------------------------------------------
-
-//DI KO NA ALAM TO :<< pa help ako palabasin result ng mga universities sa div id = "universities"
-
-
-
-async function regUniArrayBuilder(ind){
-    let response = await fetch(`https://en.wikipedia.org/w/api.php?action=parse&format=json&page=List of colleges and universities in the Philippines&prop=text&section=${ind}&disabletoc=1&origin=*`)
-    let data = await response.json()
+async function getCollegesNames(municipalities, data) {
     const parser = new DOMParser();
     const doc = parser.parseFromString(data.parse.text["*"], "text/html");
     const rows = doc.querySelectorAll("table.wikitable tbody tr");
 
-    let regUni = []
+    let universities = [];
     rows.forEach((row, index) => {
         if (index === 0) return;
         const cells = row.querySelectorAll("td");
 
-        let name
-        let location
-        let type
-
-        // For Public Schools
+        let name, location;
         if (cells.length == 6){
             name = cells[0].innerText.trim();
-            location = cells[2].innerText.trim();//location info from wiki. ie. rodriguez, rizal
-            type = getUniType(name)
-            regUni.push({name, location, type})
-        }
-
-        else if (cells.length == 5){
+            location = cells[2].innerText.trim();
+        } else if (cells.length == 5){
             name = cells[0].innerText.trim();
-            location = cells[1].innerText.trim();//location info from wiki. ie. rodriguez, rizal
-            type = getUniType(name)
-            regUni.push({name, location, type})
+            location = cells[1].innerText.trim();
+        } else return;
+
+        let plainLocation = location.match(/^([^,]+)/);
+        plainLocation = plainLocation[1].replace('sta.', 'santa').replace('sto.', 'santo');
+        let regexLocation = new RegExp(`\\b${plainLocation}\\b`, 'i');
+
+        if (location.toLowerCase().includes(municipalities.toLowerCase()) || municipalities.match(regexLocation)){
+            universities.push({name, location});
         }
     });
-    return regUni
+
+    return universities;
 }
-
-function uniSort(res){
-    res.sort((a, b) => {
-        let nameA = a.name.toLowerCase();
-        let nameB = b.name.toLowerCase();
-
-        if (nameA < nameB) return -1;
-        if (nameA > nameB) return 1;
-        return 0;
-    });
-    return res
-}
-
-async function search(name, loc) {
-    const query = `${name}, ${loc}, philippines official website'`
-    const url = 'https://api.langsearch.com/v1/web-search'
-
-    let response = await fetch(url, {
-        method: 'POST', 
-        headers: {
-            'Authorization' : 'Bearer sk-c399636d05c542a0b1e51e676bf89078', 
-            'Content-Type' : 'application/json'
-        },
-        body: JSON.stringify({
-        "query": query,
-        "freshness": "noLimit",
-        "summary": false,
-        "count": 5
-        })
-    })
-    let data = await response.json();
-    console.log(data)
-    let keywords = [
-        "edu.ph",
-        "gov.ph",
-        "classmate.ph",
-        "wikipedia",
-        "noMatch"
-    ]
-
-    let uniUrl = ""
-    keywords.some(key => {
-        if(key == "noMatch"){
-            console.log(data.data.webPages.value[0].url)
-            uniUrl = data.data.webPages.value[0].url
-            return true
-        }
-
-        return data.data.webPages.value.some(url =>{
-            const regex = new RegExp(`\\b${key}\\b`, "i");
-            if(regex.test(url.url)){
-                console.log("matched!", url.url)
-                uniUrl = url.url
-                return true
-            }
-        })
-
-        }); 
-
-    return uniUrl
-}
-
-function getUniUnderRegion(regionCode, municipalities, province){
-    let results = []
-
-    console.log(municipalities)
-
-    municipalities.forEach(muni => {
-        results.push({})
-        results[results.length - 1]["regionName"] = muni
-        results[results.length - 1]["uni"] = []
-        allUni[regionCode].forEach((content) =>{
-            const regex = new RegExp(`\\b${muni}\\b`, "i");
-            if(regex.test(content.location)){
-                if(filter != "none"){
-                    console.log(content.location)
-                        if(filter == content.type.toLowerCase()) {
-                            console.log("filtered");
-                            results[results.length - 1]["uni"].push(content);
-                        }
-                    }
-                    else results[results.length - 1]["uni"].push(content);
-                }
-        });
-    });
-   
-    const uniDisplay = document.getElementById("universities")
-
-    //Remove the previouse result
-    while (uniDisplay.firstChild){
-        uniDisplay.removeChild(uniDisplay.firstChild);
-    }
-    
-    //Show results
-        results.forEach(a => {
-        if(a['uni'].length == 0);
-        else{
-            let location;
-            if(province==undefined) location = a['regionName'];
-            else {
-                location = `${a['regionName']}, ${province}`
-                
-                uniTitle = document.createElement('Ttile');
-                uniTitle.className = 'muniTitle';
-                let title = a["regionName"].toUpperCase()
-                uniTitle.innerHTML = title
-                uniDisplay.append(uniTitle)
-            }
-
-            let uniSorted = uniSort(a["uni"])
-            uniSorted.forEach(res =>{
-                
-                displayUni(uniDisplay, res['name'], res['type'], `${location}`)
-            });
-        }
-    })
-}
-
-function displayUni(uniDisplay, name, type, location){
-    //Create new name
-    uniInfo = document.createElement('div');
-    uniInfo.className = 'uniInfoContainer';
-    uniDisplay.appendChild(uniInfo)
-
-    uniName = document.createElement('p');
-    uniName.class = 'uniName';
-    uniName.innerHTML = `<b>${name}</b> `;
-
-    //Create new typw
-    uniType = document.createElement('p');
-    uniType.class = 'uniName';
-    uniType.innerHTML = `Type: ${type}`;
-
-    //Create new location
-    uniLocation = document.createElement('p')
-    uniLocation.class = 'uniLocation';
-    uniLocation.innerHTML = `Location: ${location}`;
-
-    //Go to website button
-    uniWeb = document.createElement('Button')
-    uniWeb.class = 'uniWebButton';
-    uniWeb.innerHTML = 'visit website';
-    uniWeb.addEventListener("click", async () => {
-        let url = await search(name, location)
-        window.open(url);
-    })
-
-    uniMap = document.createElement('Button')
-    uniMap.class = 'uniWebButton';
-    uniMap.innerHTML = 'see on maps';
-    uniMap.addEventListener("click",  () => window.open(`https://www.google.com/maps/search/${name}, ${location}`))
-
-    //Add name and location on container
-    uniInfo.append(uniName, uniType, uniLocation , uniWeb, uniMap)
-    
-}
-
-
