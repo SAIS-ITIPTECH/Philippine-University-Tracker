@@ -78,6 +78,10 @@ body{
     margin: 0;
 }
 
+
+
+
+
 .container{
     width: 90%;
     margin: 0 auto;
@@ -88,13 +92,43 @@ body{
     justify-content: center;
 }
 
+
+
+
 .regions{
-    width: 28%;
+    width: 25%;
     height: 90%;
     border: 1px solid rgb(255, 255, 255);
     box-shadow: 2px 6px 16px rgba(41, 41, 41, 0.25);
     border-radius: 20px;
     padding: 10px;
+}
+
+select {
+    appearance: none;
+    -webkit-appearance: none;
+    padding: 8px;
+    margin: 0 auto;
+    display: block;
+    width: 90%;
+    height: 8%;
+    border-radius: 7px;
+    border: 1px solid #ccc;
+    outline: none;
+    cursor: pointer;
+}
+select option{
+    text-transform: uppercase;
+    text-wrap: initial;
+}
+select option:first-child{
+}
+
+.regions p{
+    padding-left: 20px;
+    margin-bottom: 5px;
+    margin-top: 10%;
+    font-size: 14px;
 }
 
 .universities{
@@ -105,6 +139,13 @@ body{
     border-radius: 20px;
     padding: 10px;
 }
+
+
+
+
+
+
+
 
 .foot{
     height: 50vh;
@@ -163,9 +204,6 @@ hr{
     color: white;
     font-size: 14px;
 }
-
-
-
 
 
 

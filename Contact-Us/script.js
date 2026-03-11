@@ -1,14 +1,12 @@
-// 1. wala kang ganto
-document.addEventListener("DOMContentLoaded", function () {
 
-    emailjs.init({publicKey: "grh1BJmsO_p19oKHs"});
+document.addEventListener("DOMContentLoaded", function (){
+    
+    emailjs.init({publicKey: "grh1BJmsO_p19oKHs"})
 
-    // 2. Listen for the submit
     const myForm = document.getElementById("contactForm");
 
     if (myForm) {
         myForm.addEventListener("submit", function(event) {
-            // 3. STOP the page from refreshing/changing the URL
             event.preventDefault();
 
             const templateParams = {
@@ -18,7 +16,6 @@ document.addEventListener("DOMContentLoaded", function () {
                 message: document.getElementById("message").value
             };
 
-            // 4. Send the email
             emailjs.send("service_lfbii0h", "template_9vm5tmv", templateParams)
                 .then(function() {
                     alert("Sent successfully!");
