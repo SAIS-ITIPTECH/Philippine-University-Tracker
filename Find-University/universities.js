@@ -143,22 +143,14 @@ function getUniUnderRegion(regionCode, matchedMuni, provinceName) {
         const regex = new RegExp("\\b" + muni + "\\b", "i");
         allUni[regionCode].forEach(uni => {
             if (regex.test(uni.location)) {
-                let matchesFilter = false;
-                if (filter === "none" || filter === null) {
-                    matchesFilter = true;
-                } else if (filter === uni.type.toLowerCase()) {
-                    matchesFilter = true;
+                let displayLoc;
+                if (provinceName !== "") {
+                    displayLoc = muni + ", " + provinceName;
+                } else {
+                    displayLoc = muni;
                 }
-                if (matchesFilter === true) {
-                    let displayLoc;
-                    if (provinceName !== "") {
-                        displayLoc = muni + ", " + provinceName;
-                    } else {
-                        displayLoc = muni;
-                    }
-                    uni.location = displayLoc
-                    filteredUniList.push({ ...uni});
-                }
+                uni.location = displayLoc
+                filteredUniList.push({ ...uni});
             }
         });
     });

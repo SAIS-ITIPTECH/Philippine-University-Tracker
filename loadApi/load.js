@@ -1,5 +1,3 @@
-const regionsContainer = document.getElementById("regionsContainer");
-
 //declaration ng array
 let allRegions = [];
 let allProvinces = [];
@@ -32,7 +30,7 @@ async function loadApi(){
         allRegions = fixEnye(r);
         allProvinces = fixEnye(p);
         allCities = fixEnye(c);
-        munuiciplaities = fixEnye(m)
+        allMunicipalities = fixEnye(m)
         await allUniArrayBuilder()
 
         localStorage.setItem("allRegions", JSON.stringify(allRegions))
@@ -59,7 +57,6 @@ async function allUniArrayBuilder(){
     let index = 1
     console.log("wait")
     for(let i = 1; i < 50; i += 3){
-        console.log(i)
         let regUni = await regUniArrayBuilder(i)
         if(index < 10) allUni["0" + index] = regUni
         else if(i == 43) allUni['19'] = regUni
@@ -67,7 +64,6 @@ async function allUniArrayBuilder(){
         index++
     }
     console.log("done")
-    console.log(allUni)
 }
 
 async function regUniArrayBuilder(ind){
