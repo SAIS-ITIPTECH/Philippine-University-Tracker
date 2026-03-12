@@ -1,4 +1,3 @@
-
 const regionsContainer = document.getElementById("regionsContainer");
 const provinceContainer = document.getElementById("provinceContainer");
 const uniDisplay = document.getElementById("universities");
@@ -11,15 +10,18 @@ let cities = JSON.parse(localStorage.getItem("cities")) || [];
 let munuiciplaities = JSON.parse(localStorage.getItem("munuiciplaities")) || [];
 let allUni = JSON.parse(localStorage.getItem("allUni")) || {};
 let filter = localStorage.getItem("filter");
+console.log(allUni)
 
 //para sa pagination
 let currentPage = 1;
 const itemsPerPage = 8;
 let filteredUniList = [];
 
-
 buildRegions();
-searchUniversity(); 
+
+
+//BUTTONN
+//MAKER
 //gumagawa ng dropdown para sa region
 function buildRegions() {
     regionsContainer.innerHTML = '<option value="">Select Region</option>';
@@ -29,7 +31,6 @@ function buildRegions() {
         regionsContainer.appendChild(option);
     });
 }
-
 
 //listener kung sakaling ichange yung region marereset ulit province dropdown
 regionsContainer.addEventListener("change", function(e) {
@@ -41,7 +42,6 @@ regionsContainer.addEventListener("change", function(e) {
         loadProvinceOptions(regionPrefix);
     }
 });
-
 
 
 //taga load ng province
@@ -80,7 +80,7 @@ function loadProvinceOptions(regionPrefix) {
             provinceNameForDisplay = ""; 
         } else {
             //hahanapain yung municipalities sa province container
-            subUnits = matchMuncipalities(provinceContainer.value);
+            subUnits = matchMuncipalities(provinceContainer.value, text);
             provinceNameForDisplay = text;
         }
         
@@ -90,48 +90,24 @@ function loadProvinceOptions(regionPrefix) {
 
 
 
+
+
+//UNIBUILDER
 //taga hanap ng municipalities based sa provincecode
-function matchMuncipalities(provincePrefix) {
+function matchMuncipalities(provincePrefix, provinceName) {
     let combinedList = [...munuiciplaities, ...cities];
-    let matches = [];
+    let matches = []
 
     combinedList.forEach(function(item) {
         if (item.code.startsWith(provincePrefix)) {
             const cleanName = item.name.replace(/\b(City of|City)\b\s*/gi, '').trim();
             matches.push(cleanName);
-        });
-
-        provinceContainer.addEventListener("change", function() {
-            provinceContainer.value = this.options[this.selectedIndex].value
-            const text = this.options[this.selectedIndex].text;
-            getUniUnderRegion(regionPrefix, matchMuncipalities(provinceContainer.value, text), text)
-        });
-    }
-}
-
-function matchMuncipalities(prefix, provinceName){
-    let matchedMuncipalities = {}
-    matchedMuncipalities[provinceName] = []
-
-
-    munuiciplaities.forEach((a)=>{
-        if(a.code.startsWith(prefix)){
-            matchedMuncipalities[provinceName].push(a.name.trim())
-        }
-    });
-
-    cities.forEach((a)=>{
-        if(a.code.startsWith(prefix)){
-            let cleaned = a.name.replace(/\b(City of|City)\b\s*/gi, '').trim();
-            matchedMuncipalities[provinceName].push(cleaned)
         }
     });
 
     let uniqueMatches = [...new Set(matches)];
-    return uniqueMatches.sort();
+    return uniqueMatches;
 }
-
-
 
 //finds universities based sa selected region and province
 function getUniUnderRegion(regionCode, municipalities, provinceName) {
@@ -146,7 +122,6 @@ function getUniUnderRegion(regionCode, municipalities, provinceName) {
     municipalities.forEach(function(muni) {
         // Create a search pattern for the municipality name
         const regex = new RegExp("\\b" + muni + "\\b", "i");
-
         allUni[regionCode].forEach(function(uni) {
             //taga check if uni contains muni
             if (regex.test(uni.location)) {
@@ -166,9 +141,9 @@ function getUniUnderRegion(regionCode, municipalities, provinceName) {
                     } else {
                         displayLoc = muni;
                     }
-                    
-                    
-                    filteredUniList.push({ ...uni, displayLocation: displayLoc });
+
+                    uni.location = displayLoc
+                    filteredUniList.push({ ...uni});
                 }
             }
         });
@@ -176,58 +151,66 @@ function getUniUnderRegion(regionCode, municipalities, provinceName) {
 
     finalizeResults();
 }
-
-
-
-//para sa search (AYAW GUMANA NG NASA FIND UNIVERSITY)
-function searchUniversity() {
-
-    
-    let query = localStorage.getItem("querry");
-    if (query === null) { query = ""; }
-
-    
-    const allUniversitiesFlat = Object.values(allUni).flat();
-    //nilalagay lahat sa contianer natin
-    filteredUniList = allUniversitiesFlat.filter(function(uni) {
-        const regex = new RegExp(query, "i");
-        return regex.test(uni.name);
-    });
-
-    filteredUniList = filteredUniList.map(function(uni) {
-        return { ...uni, displayLocation: uni.location};
-    })
-
-    finalizeResults();
-}
-
-
-//event listener para sa search
-const searchIcon = document.getElementById("searchIcon");
-const searchInput = document.getElementById("querry");
-
-searchIcon.onclick = function() {
-    searchUniversity();
-};
-
-searchInput.addEventListener("keypress", function(event) {
-    if (event.key === "Enter") {
-        searchUniversity();
-    }
-});
-
-
+ 
 //taga finalize ng results and taga sort
 function finalizeResults() {
+    //Sort all Uni
     filteredUniList.sort(function(a, b) {
         return a.name.localeCompare(b.name);
     });
+
+    //Sort All Province
+    filteredUniList.sort(function(a, b) {
+        return a.location.localeCompare(b.location);
+    });
+
+    //Sort All Muni
+    filteredUniList.sort((a, b) => {
+        let aPart = a.location.includes(",") ? a.location.split(",")[1].trim() : a.location;
+        let bPart = b.location.includes(",") ? b.location.split(",")[1].trim() : b.location;
+
+        return aPart.localeCompare(bPart);
+    });
+
     currentPage = 1;
     renderPagedResults();
 }
 
+//para sa every university card
+function renderUniCard(uni) {
+    const card = document.createElement('div');
+    card.className = 'uniInfoContainer';
+    
+    card.innerHTML = `
+        <div class="uniTopRow">
+            <p class="uniName">${uni.name}</p>
+            
+        </div>
+        <div class="uniBottomRow">
+            <p class="uniType">Type: <strong>${uni.type}</strong></p>
+            <p class="uniLocation">Location: <strong>${uni.location}</strong></p>
+            <div class="uniButtonGroup">
+                <button class="web-btn">visit website</button>
+                <button class="map-btn">see on maps</button>               
+            </div>
 
-//para sa pagination
+        </div>
+    `;
+
+    //para sa visit website tsaka view on map
+    card.querySelector('.web-btn').onclick = async function() {
+        let url = await goToDomain(uni.name, uni.location);
+        window.open(url);
+    };
+
+    card.querySelector('.map-btn').onclick = function() {
+        const query = uni.name + ", " + uni.location;
+        window.open("https://www.google.com/maps/search/" + query);
+    };
+
+    uniDisplay.appendChild(card);
+}
+
 function renderPagedResults() {
     uniDisplay.innerHTML = "";
     paginationDisplay.innerHTML = "";
@@ -243,54 +226,16 @@ function renderPagedResults() {
 
     paginatedItems.forEach(function(uni) {
         renderUniCard(uni);
-    // Display the 10 items
-    paginatedItems.forEach(res => {
-        displayUni(uniDisplay, res.name, res.type, res.location);
-    });
-
-    paginatedItems.forEach(res => {
-        displayResults(uniDisplay, res.name, res.type, res.location);
     });
 
     buildPaginationControls(filteredUniList.length);
 }
 
 
-//para sa every university card
-function renderUniCard(uni) {
-    const card = document.createElement('div');
-    card.className = 'uniInfoContainer';
-    
-    card.innerHTML = `
-        <div class="uniTopRow">
-            <p class="uniName">${uni.name}</p>
-            
-        </div>
-        <div class="uniBottomRow">
-            <p class="uniType">Type: <strong>${uni.type}</strong></p>
-            <p class="uniLocation">Location: <strong>${uni.displayLocation}</strong></p>
-            <div class="uniButtonGroup">
-                <button class="web-btn">visit website</button>
-                <button class="map-btn">see on maps</button>               
-            </div>
 
-        </div>
-    `;
 
-    //para sa visit website tsaka view on map
-    card.querySelector('.web-btn').onclick = async function() {
-        let url = await search(uni.name, uni.displayLocation);
-        window.open(url);
-    };
-
-    card.querySelector('.map-btn').onclick = function() {
-        const query = uni.name + ", " + uni.displayLocation;
-        window.open("https://www.google.com/maps/search/" + query);
-    };
-
-    uniDisplay.appendChild(card);
-}
-
+//PAGINATION
+//para sa pagination
 //sa page number selector
 function buildPaginationControls(totalItems) {
     const totalPages = Math.ceil(totalItems / itemsPerPage);
@@ -342,7 +287,45 @@ function buildPaginationControls(totalItems) {
 }
 
 
+
+
+//STUFFS PARA SA FILTER
 //taga clear ng filter (SA SELECTION PA LANG GUMAGANA HINDI KO MAPAGANA YUNG clear SA SEARCH)
+//para sa search (AYAW GUMANA NG NASA FIND UNIVERSITY)
+function searchUniversity(text) {
+    //eto na yung sa NCR
+    
+    let query = localStorage.getItem("query");
+    if (query === null) { query = text}
+    if (query == "" || query == undefined) {return}
+
+    console.log(query)
+
+    const allUniversitiesFlat = Object.values(allUni).flat();
+    //nilalagay lahat sa contianer natin
+    filteredUniList = allUniversitiesFlat.filter(function(uni) {
+        const regex = new RegExp(query, "i");
+        return regex.test(uni.name);
+    });
+
+    console.log(filteredUniList)
+
+    finalizeResults();
+}
+
+//event listener para sa search
+const searchIcon = document.getElementById("searchIcon");
+const searchInput = document.getElementById("querry");
+
+searchIcon.onclick = function() {
+    searchUniversity(searchInput.value);
+};
+
+searchInput.addEventListener("keypress", function(event) {
+    if (event.key === "Enter") {
+        searchUniversity(searchInput.value);
+    }
+});
 
 function clearAllFilters() {
     const searchInput = document.getElementById("querry");
@@ -367,12 +350,13 @@ const clearLink = document.querySelector(".clear");
 if (clearLink !== null) {
     clearLink.onclick = function(event) {
         event.preventDefault(); 
-        
+
         clearAllFilters();
     };
 }
 
-async function search(name, loc) {
+//SEARCH API para sa Domain
+async function goToDomain(name, loc) {
     const query = `${name}, ${loc}, philippines official website'`
     const url = 'https://api.langsearch.com/v1/web-search'
 
@@ -418,10 +402,3 @@ async function search(name, loc) {
     return uniUrl
 }
 
-document.getElementById("searchButt").addEventListener("click", () =>{
-    searchUniversity(true);
-});
-
-if (filter != null) {
-    searchUniversity(false);
-}
