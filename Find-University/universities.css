@@ -1,4 +1,6 @@
-
+html{
+    scroll-behavior: smooth;
+}
 body{
     margin: 0;
     font-family: "Poppins", sans-serif;
@@ -199,12 +201,11 @@ select option{
     padding: 20px;
     margin: 15px 0;
     display: flex;
-    flex-direction: column; /* Stacks Top Row and Bottom Row */
+    flex-direction: column;
     gap: 20px;
     box-shadow: 0 4px 6px rgba(0,0,0,0.05);
 }
 
-/* Push name to left and buttons to right */
 .uniTopRow {
     display: flex;
     justify-content: space-between; 
@@ -220,7 +221,7 @@ select option{
 
 .uniButtonGroup {
     display: flex;
-    gap: 10px; /* Space between the two buttons */
+    gap: 10px; 
 }
 
 .uniWebButton {
@@ -235,7 +236,6 @@ select option{
     background: #f0f0f0;
 }
 
-/* Put info side-by-side at the bottom */
 .uniBottomRow {
     display: flex;
     gap: 40px;
@@ -253,7 +253,7 @@ select option{
 
 /* ----------------------------------------------------------------------------------------------- */
 
-
+/* PARA SA PAGINATION */
 
 .pagination-container {
     display: flex;
@@ -284,7 +284,7 @@ select option{
 }
 
 .pag-btn.active {
-    background-color: #6d3e00; /* Matching that blue-grey active state */
+    background-color: #6d3e00; 
     color: white;
 }
 
@@ -293,7 +293,6 @@ select option{
     cursor: not-allowed;
 }
 
-/* Specific styling for START/PREV labels */
 .pag-btn:first-child, .pag-btn:nth-child(2),
 .pag-btn:nth-last-child(2), .pag-btn:last-child {
     font-size: 10px;
@@ -302,10 +301,8 @@ select option{
 
 
 
-
-
 /* ----------------------------------------------------------------------------------------------- */
-
+/* PARA SA FOOTER */
 
 .foot{
     height: 50vh;
