@@ -118,22 +118,21 @@ html{
     display: inline-flex;
     align-items: center;
     text-decoration: none;
-    color: #7a4f00; /* Matching your university card's brown theme */
+    color: #7a4f00;
     font-size: 14px;
     font-weight: 500;
     padding: 10px 18px;
     border-radius: 4px;
     transition: all 0.2s ease-in-out;
-    gap: 6px; /* Perfect spacing between X and text */
+    gap: 6px;
 }
 .clear .ic {
     font-size: 16px;
-    /* Adjusting color slightly if you want the icon to pop more */
     color: #d35400; 
 }
 .clear:hover {
-    background-color: #fff5e6; /* Soft orange/brown tint */
-    color: #d35400; /* Shifts slightly more orange on hover */
+    background-color: #fff5e6; 
+    color: #d35400;
     text-decoration: none;
 }
 .clear:active {
@@ -257,10 +256,11 @@ select option{
     width: 60%;
     height: 95%;
     border: 1px solid rgb(255, 255, 255);
-    box-shadow: 2px 6px 16px rgba(41, 41, 41, 0.25);
+    box-shadow: 2px 6px 16px rgb(49, 49, 49);
     border-radius: 20px;
     padding: 5px 20px;
     background-color: white;
+    
 }
 
 
@@ -275,14 +275,14 @@ select option{
 }
 
 .uniInfoContainer {
-    border: 1px solid #ddd;
+    border: 1px solid #743200;
     border-radius: 15px;
     padding: 20px;
     margin: 15px 0;
     display: flex;
     flex-direction: column;
     gap: 20px;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+    box-shadow: 0 4px 6px rgba(242, 108, 108, 0.05);
 }
 
 .uniTopRow {
@@ -314,7 +314,7 @@ select option{
     cursor: pointer;
     border-radius: 5px;
     border: 1px solid #ccc;
-    background: rgb(255, 255, 255);
+    background-color: rgb(203, 101, 0);
 }
 
 .uniWebButton:hover {
@@ -345,8 +345,8 @@ select option{
     font-weight: 500;
     border-radius: 6px;
     border: 1px solid #ddd;
-    background-color: #fff;
-    color: #444444;
+    background-color: #88430e;
+    color: #ffffff;
     cursor: pointer;
     display: flex;
     align-items: center;
@@ -367,7 +367,7 @@ select option{
 }
 
 .map-btn i {
-    color: #682100; 
+    color: #ffffff; 
 }
 /* ----------------------------------------------------------------------------------------------- */
 

@@ -226,3 +226,83 @@ hr{
 }
 
 
+@media (max-width: 768px) {
+    .nav {
+        height: auto;
+        flex-direction: column;
+        padding: 10px 0;
+    }
+
+    .navLinks ul {
+        padding: 0;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    .navLinks ul li {
+        margin: 5px 10px;
+    }
+
+    .navLinks ul li:nth-last-child(2) a {
+        border-right: none;
+    }
+
+    .homeContent {
+        width: 90%;
+        padding: 10px;
+        margin: 10% auto;
+    }
+
+    .homeContent h1 {
+        font-size: 1.8rem;
+    }
+
+    .homeContent h3 {
+        font-size: 1rem;
+    }
+
+    .search {
+        width: 100%;
+    }
+
+    .searchCategories {
+        width: 100%;
+        gap: 10px;
+    }
+
+    .searchCategories button {
+        padding: 8px 15px;
+        font-size: 12px;
+    }
+
+    .foot {
+        height: auto;
+        padding: 40px 0;
+    }
+
+    .footCon {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        width: 90%;
+    }
+
+    .infooter, .f {
+        width: 100%;
+        padding: 20px 0;
+        margin: 0;
+    }
+
+    .infooter p {
+        width: 100%;
+    }
+
+    .f {
+        padding-left: 0;
+    }
+
+    .ri {
+        margin: 20px auto;
+        text-align: center;
+    }
+}
