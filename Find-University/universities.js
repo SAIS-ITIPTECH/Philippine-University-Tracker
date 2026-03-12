@@ -77,8 +77,9 @@ function loadProvinceOptions(regionPrefix) {
 
     list.forEach(function(item) {
         if (item.code.startsWith(regionPrefix)) {
-            const cleanName = item.name.replace(/\b(City of|City)\b\s*/gi, '').trim();
-            
+            let cleanName = item.name.replace(/\b(City of|City)\b\s*/gi, '').trim();
+            if(item.name == "Quezon City") cleanName = item.name;
+
             // Code prefix for provinces is usually 5 digits
             const option = new Option(cleanName, item.code.substring(0, 5));
             provinceContainer.appendChild(option);
@@ -364,7 +365,7 @@ async function goToDomain(name, loc) {
         "query": query,
         "freshness": "noLimit",
         "summary": false,
-        "count": 5
+        "count": 15
         })
     })
     let data = await response.json();
