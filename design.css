@@ -3,7 +3,6 @@ body{
     font-family: "Poppins", sans-serif;
     width: 100%;
     height: 100%;
-    scroll-snap-type: y mandatory;
 }
 
 html{
@@ -45,7 +44,6 @@ section{
     gap: 20px;
     margin-left: auto;
     margin-right: 20px;
-    
 }
 .navLinks a{
     text-decoration: none;
@@ -69,6 +67,9 @@ section{
     font-weight: 600;
     border-bottom: 2px solid rgb(214, 82, 0);
 }
+
+
+
 
 .home{
     width: 100%;
@@ -127,6 +128,9 @@ section{
     margin: 12px;
     border: none;
     font-size: 1rem;
+}
+input[type="search"]::-webkit-search-cancel-button {
+  -webkit-appearance: none;
 }
 #searchIcon{
     background-image: url(images/searchIcon.png);

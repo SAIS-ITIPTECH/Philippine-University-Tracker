@@ -27,7 +27,7 @@ section{
     z-index: 999;
 }
 .logo{
-    background-image: url('../images/textlogo.png');
+    background-image: url(../images/textlogo.png);
     background-size: contain;
     background-repeat: no-repeat;
     width: 250px;
@@ -91,6 +91,11 @@ section{
     padding-top: 20px;
     text-align: center;
 }
+
+
+
+
+
 .formCon{
     width: 100vw;
     height: 110vh;
@@ -118,7 +123,7 @@ section{
     padding: 20px 40px;
     border: 2px solid rgb(229, 229, 229);
     width: 50%;
-    height: 60%;
+    height: 65%;
     margin: 0 auto;
     display: block;
     border-radius: 20px;
@@ -143,7 +148,7 @@ textarea{
     font-weight: 500;
 }
 #contactForm button{
-    background-color: rgb(255, 89, 0);
+    background-color: #ff5900;
     color: white;
     border: none;
     padding: 10px 20px;
@@ -152,6 +157,44 @@ textarea{
     font-weight: 500;
     cursor: pointer;
 }
+
+.modal-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.6);
+    z-index: 1000;
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-content {
+    background: white;
+    padding: 2rem;
+    border-radius: 8px;
+    text-align: center;
+    max-width: 400px;
+    width: 90%;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.modal-content button {
+    margin-top: 1rem;
+    padding: 0.5rem 2rem;
+    cursor: pointer;
+    background: #411d00;
+    color: white;
+    border: none;
+    border-radius: 4px;
+}
+
+
+
+
+
 
 .foot{
     height: 50vh;

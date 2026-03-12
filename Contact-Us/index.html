@@ -39,6 +39,14 @@
         <h2>Send us a Message</h2>
         <p>We would love to hear from you! Please fill out the form below.</p>
 
+        <div id="statusModal" class="modal-overlay">
+            <div class="modal-content">
+                <h3 id="modalTitle">Notification</h3>
+                <p id="modalMessage"></p>
+                <button onclick="closeModal()">Close</button>
+            </div>
+        </div>
+
         <form id="contactForm">
 
             <label for="name">Name</label>

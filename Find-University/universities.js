@@ -201,11 +201,13 @@ function renderUniCard(uni) {
             
         </div>
         <div class="uniBottomRow">
+            <div class="uniInfoGroup">
             <p class="uniType">Type: <strong>${uni.type}</strong></p>
             <p class="uniLocation">Location: <strong>${uni.location}</strong></p>
+            </div>
             <div class="uniButtonGroup">
-                <button class="web-btn">visit website</button>
-                <button class="map-btn">see on maps</button>               
+                <button class="web-btn"><i class="fa-solid fa-earth-americas"></i>Visit Website</button>
+                <button class="map-btn"><i class="fa-solid fa-location-dot"></i>See on maps</button>               
             </div>
 
         </div>

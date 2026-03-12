@@ -27,7 +27,7 @@ section{
     z-index: 999;
 }
 .logo{
-    background-image: url('../images/textlogo.png');
+    background-image: url(../images/textlogo.png);
     background-size: contain;
     background-repeat: no-repeat;
     width: 250px;
@@ -196,6 +196,7 @@ section{
     color: rgb(129, 45, 0);
     text-decoration: none;
 }
+
 .img{
     width: 90px;
     height: 80px;
@@ -203,10 +204,31 @@ section{
     display: flex;
     align-items: center;
 }
+.one{
+    background-image: url(../images/jade.png);
+}
+.two{
+    background-image: url(../images/marlon.png);
+}
+.three{
+    background-image: url(../images/lourence.png);
+}
+.four{
+    background-image: url(../images/josh.png);
+}
+
+
+
+
+
+
+
+
+
+
 .realImg{
     width: 90%;
     height: 90%;
-    background-image: url('../images/logo.png');
     background-size: cover;
     background-position: center;
     border-radius: 50%;
