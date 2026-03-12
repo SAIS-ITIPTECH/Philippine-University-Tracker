@@ -16,7 +16,31 @@ let currentPage = 1;
 const itemsPerPage = 8;
 let filteredUniList = [];
 
+
+
+//event listener para sa search
+const searchIcon = document.getElementById("searchIcon");
+const searchInput = document.getElementById("querry");
+
+searchIcon.onclick = function() {
+    searchUniversity(searchInput.value);
+};
+
+searchInput.addEventListener("keypress", function(event) {
+    if (event.key === "Enter") {
+        searchUniversity(searchInput.value);
+    }
+});
+
+if(localStorage.getItem('query') != null){
+    let q = localStorage.getItem('query')
+    localStorage.removeItem('query')
+    searchInput.value = q
+    searchUniversity(q)
+}
+
 buildRegions();
+
 
 //BUTTON MAKER
 //gumagawa ng dropdown para sa region
@@ -302,20 +326,6 @@ function searchUniversity(text) {
 
     finalizeResults();
 }
-
-//event listener para sa search
-const searchIcon = document.getElementById("searchIcon");
-const searchInput = document.getElementById("querry");
-
-searchIcon.onclick = function() {
-    searchUniversity(searchInput.value);
-};
-
-searchInput.addEventListener("keypress", function(event) {
-    if (event.key === "Enter") {
-        searchUniversity(searchInput.value);
-    }
-});
 
 function clearAllFilters() {
     const searchInput = document.getElementById("querry");

@@ -8,12 +8,12 @@ let allMunicipalities = [];
 let allUni = {};
 
 //Chinecheck kung yug data is loaded na para pag oks na , pede na agad pindutin yung button
-const data = localStorage.getItem("allUni");
-if (data === null) {
-    if(data.length < 19){
-        console.log("data doesnt exist, loading now");
-        loadApi()
-    }
+const data = JSON.parse(localStorage.getItem("allUni"));
+console.log(Object.keys(data).length)
+if (data === null || Object.keys(data).length < 17) {
+    console.log("data doesnt exist, loading now");
+    loadApi()
+
 } else {
     console.log("data exist, loading now");
     enableButton()
@@ -40,7 +40,6 @@ async function loadApi(){
         localStorage.setItem("allMunicipalities", JSON.stringify(allMunicipalities))
         localStorage.setItem("allCities", JSON.stringify(allCities))
         localStorage.setItem("allUni", JSON.stringify(allUni))
-        
         enableButton();
     })
 
