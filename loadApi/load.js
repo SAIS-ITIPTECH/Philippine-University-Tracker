@@ -1,17 +1,19 @@
 const regionsContainer = document.getElementById("regionsContainer");
 
 //declaration ng array
-let regions = [];
-let provinces = [];
-let cities = [];
-let munuiciplaities = [];
+let allRegions = [];
+let allProvinces = [];
+let allCities = [];
+let allMunicipalities = [];
 let allUni = {};
 
 //Chinecheck kung yug data is loaded na para pag oks na , pede na agad pindutin yung button
 const data = localStorage.getItem("allUni");
 if (data === null) {
-    console.log("data doesnt exist, loading now");
-    loadApi()
+    if(data.length < 19){
+        console.log("data doesnt exist, loading now");
+        loadApi()
+    }
 } else {
     console.log("data exist, loading now");
     enableButton()
@@ -27,16 +29,16 @@ async function loadApi(){
     ])
 
     .then(async ([r, p, c, m]) => {
-        regions = fixEnye(r);
-        provinces = fixEnye(p);
-        cities = fixEnye(c);
+        allRegions = fixEnye(r);
+        allProvinces = fixEnye(p);
+        allCities = fixEnye(c);
         munuiciplaities = fixEnye(m)
         await allUniArrayBuilder()
 
-        localStorage.setItem("regions", JSON.stringify(regions))
-        localStorage.setItem("provinces", JSON.stringify(provinces))
-        localStorage.setItem("munuiciplaities", JSON.stringify(munuiciplaities))
-        localStorage.setItem("cities", JSON.stringify(cities))
+        localStorage.setItem("allRegions", JSON.stringify(allRegions))
+        localStorage.setItem("allProvinces", JSON.stringify(allProvinces))
+        localStorage.setItem("allMunicipalities", JSON.stringify(allMunicipalities))
+        localStorage.setItem("allCities", JSON.stringify(allCities))
         localStorage.setItem("allUni", JSON.stringify(allUni))
         
         enableButton();

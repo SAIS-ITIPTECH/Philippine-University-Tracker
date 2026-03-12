@@ -4,13 +4,12 @@ const uniDisplay = document.getElementById("universities");
 const paginationDisplay = document.getElementById("pagination");
 
 
-let regions = JSON.parse(localStorage.getItem("regions")) || [];
-let provinces = JSON.parse(localStorage.getItem("provinces")) || [];
-let cities = JSON.parse(localStorage.getItem("cities")) || [];
-let munuiciplaities = JSON.parse(localStorage.getItem("munuiciplaities")) || [];
+let allRegions = JSON.parse(localStorage.getItem("regions")) || [];
+let allProvinces = JSON.parse(localStorage.getItem("provinces")) || [];
+let allCities = JSON.parse(localStorage.getItem("cities")) || [];
+let allMunicipalities = JSON.parse(localStorage.getItem("munuiciplaities")) || [];
 let allUni = JSON.parse(localStorage.getItem("allUni")) || {};
 let filter = localStorage.getItem("filter");
-console.log(allUni)
 
 //para sa pagination
 let currentPage = 1;
@@ -19,22 +18,20 @@ let filteredUniList = [];
 
 buildRegions();
 
-
-//BUTTONN
-//MAKER
+//BUTTON MAKER
 //gumagawa ng dropdown para sa region
 function buildRegions() {
     regionsContainer.innerHTML = '<option value="">Select Region</option>';
     
-    regions.forEach(function(region) {
+    allRegions.forEach(function(region) {
         const option = new Option(region.name, region.code.substring(0, 2));
         regionsContainer.appendChild(option);
     });
 }
 
 //listener kung sakaling ichange yung region marereset ulit province dropdown
-regionsContainer.addEventListener("change", function(e) {
-    const regionPrefix = e.target.value;
+regionsContainer.addEventListener("change", reg =>{
+    const regionPrefix = reg.target.value;
     
     provinceContainer.innerHTML = '<option value="">Select Province</option>';
     
@@ -43,16 +40,15 @@ regionsContainer.addEventListener("change", function(e) {
     }
 });
 
-
 //taga load ng province
 function loadProvinceOptions(regionPrefix) {
     let list;
     
     //eto na yung sa NCR
     if (regionPrefix === "13") {
-        list = [...cities, ...munuiciplaities];
+        list = [...allCities, ...allMunicipalities];
     } else {
-        list = provinces;
+        list = allProvinces;
     }
 
     list.forEach(function(item) {
@@ -80,7 +76,7 @@ function loadProvinceOptions(regionPrefix) {
             provinceNameForDisplay = ""; 
         } else {
             //hahanapain yung municipalities sa province container
-            subUnits = matchMuncipalities(provinceContainer.value, text);
+            subUnits = matchMuncipalities(provinceContainer.value);
             provinceNameForDisplay = text;
         }
         
@@ -94,11 +90,11 @@ function loadProvinceOptions(regionPrefix) {
 
 //UNIBUILDER
 //taga hanap ng municipalities based sa provincecode
-function matchMuncipalities(provincePrefix, provinceName) {
-    let combinedList = [...munuiciplaities, ...cities];
+function matchMuncipalities(provincePrefix) {
+    let combinedList = [...allMunicipalities, ...allCities];
     let matches = []
 
-    combinedList.forEach(function(item) {
+    combinedList.forEach(item => {
         if (item.code.startsWith(provincePrefix)) {
             const cleanName = item.name.replace(/\b(City of|City)\b\s*/gi, '').trim();
             matches.push(cleanName);
@@ -110,7 +106,7 @@ function matchMuncipalities(provincePrefix, provinceName) {
 }
 
 //finds universities based sa selected region and province
-function getUniUnderRegion(regionCode, municipalities, provinceName) {
+function getUniUnderRegion(regionCode, matchedMuni, provinceName) {
     filteredUniList = [];
 
     // Safety check: if the region doesn't exist in our university data, stop.
@@ -119,21 +115,16 @@ function getUniUnderRegion(regionCode, municipalities, provinceName) {
         return;
     }
 
-    municipalities.forEach(function(muni) {
-        // Create a search pattern for the municipality name
+    matchedMuni.forEach(muni => {
         const regex = new RegExp("\\b" + muni + "\\b", "i");
-        allUni[regionCode].forEach(function(uni) {
-            //taga check if uni contains muni
+        allUni[regionCode].forEach(uni => {
             if (regex.test(uni.location)) {
-                
-                //taga check ng type
                 let matchesFilter = false;
                 if (filter === "none" || filter === null) {
                     matchesFilter = true;
                 } else if (filter === uni.type.toLowerCase()) {
                     matchesFilter = true;
                 }
-
                 if (matchesFilter === true) {
                     let displayLoc;
                     if (provinceName !== "") {
@@ -141,7 +132,6 @@ function getUniUnderRegion(regionCode, municipalities, provinceName) {
                     } else {
                         displayLoc = muni;
                     }
-
                     uni.location = displayLoc
                     filteredUniList.push({ ...uni});
                 }
