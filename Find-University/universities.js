@@ -1,20 +1,22 @@
 const regionsContainer = document.getElementById("regionsContainer");
 const provinceContainer = document.getElementById("provinceContainer");
-import { search } from "../SearchAPI/search.js";
 
 let regions = JSON.parse(localStorage.getItem("regions"));
 let provinces = JSON.parse(localStorage.getItem("provinces"));
 let cities = JSON.parse(localStorage.getItem("cities"));
 let munuiciplaities = JSON.parse(localStorage.getItem("munuiciplaities"));
 let allUni = JSON.parse(localStorage.getItem("allUni"));
-let filter = localStorage.getItem("filter")
-console.log(1)
 
+let filter = localStorage.getItem("filter");
+
+let currentPage = 1;
+const itemsPerPage = 8;
+let filteredUniList = []; // This will hold all matching unis before slicing
+
+searchUniversity();
 buildRegions();
-
 // hinsdi na buttons gagawin nya, option na sa regions selection
 function buildRegions() {
-    console.log(1)
     regionsContainer.innerHTML = '<option value="">Select Region </option>';
 
     regions.forEach(region => {
@@ -71,29 +73,32 @@ function loadProvinceOptions(regionPrefix) {
         provinceContainer.addEventListener("change", function() {
             provinceContainer.value = this.options[this.selectedIndex].value
             const text = this.options[this.selectedIndex].text;
-            getUniUnderRegion(regionPrefix, matchMuncipalities(provinceContainer.value), text)
+            getUniUnderRegion(regionPrefix, matchMuncipalities(provinceContainer.value, text), text)
         });
     }
 }
 
-function matchMuncipalities(prefix){
-    let matchedMuncipalities = []
+function matchMuncipalities(prefix, provinceName){
+    let matchedMuncipalities = {}
+    matchedMuncipalities[provinceName] = []
+
+
     munuiciplaities.forEach((a)=>{
         if(a.code.startsWith(prefix)){
-            matchedMuncipalities.push(a.name.trim())
+            matchedMuncipalities[provinceName].push(a.name.trim())
         }
     });
 
     cities.forEach((a)=>{
         if(a.code.startsWith(prefix)){
             let cleaned = a.name.replace(/\b(City of|City)\b\s*/gi, '').trim();
-            matchedMuncipalities.push(cleaned)
+            matchedMuncipalities[provinceName].push(cleaned)
         }
     });
 
-    matchedMuncipalities.sort((a, b) => a.toLowerCase().localeCompare(b.toLowerCase()));
-    console.log(matchedMuncipalities)
+    matchedMuncipalities[provinceName].sort((a, b) => a.toLowerCase().localeCompare(b.toLowerCase()));
     return matchedMuncipalities
+
 }
 
 
@@ -112,31 +117,58 @@ function uniSort(res){
         if (nameA > nameB) return 1;
         return 0;
     });
+
+    res.sort((a, b) => {
+        let nameA = a.location.toLowerCase();
+        let nameB = b.location.toLowerCase();
+
+        if (nameA < nameB) return -1;
+        if (nameA > nameB) return 1;
+        return 0;
+    });
+
+    res.sort((a, b) => {
+    let aPart = a.location.includes(",") ? a.location.split(",")[1].trim() : a.location;
+    let bPart = b.location.includes(",") ? b.location.split(",")[1].trim() : b.location;
+        return aPart.localeCompare(bPart);
+    });
+
     return res
 }
 
-let currentPage = 1;
-const itemsPerPage = 8;
-let filteredUniList = []; // This will hold all matching unis before slicing
 
 // Modify your getUniUnderRegion function
-function getUniUnderRegion(regionCode, municipalities, province) {
+function getUniUnderRegion(regionCode, municipalities, provinceName) {
     filteredUniList = []; // Reset the master list
+    let m
     
+    let i = 1
+    if(provinceName != null){
+        municipalities = municipalities[provinceName]
+    } 
+
     municipalities.forEach(muni => {
+        i++
         if (allUni[regionCode]) {
             allUni[regionCode].forEach((content) => {
                 const regex = new RegExp(`\\b${muni}\\b`, "i");
                 if (regex.test(content.location)) {
                     // Apply filtering logic
-                    if (filter === "none" || filter === content.type.toLowerCase()) {
+                    if (filter === "none") {
                         // Store uni with its calculated location for display
-                        const displayLocation = province ? `${muni}, ${province}` : muni;
-                        filteredUniList.push({ ...content, displayLocation });
+
+                        const displayLocation = provinceName ? `${muni}, ${provinceName}` : muni;
+                        content["location"] = displayLocation
+                        filteredUniList.push({ ...content});
+                    } else if (filter === content.type.toLowerCase()){
+                        const displayLocation = provinceName ? `${muni}, ${provinceName}` : muni;
+                        content["location"] = displayLocation
+                        filteredUniList.push({ ...content});
                     }
                 }
             });
         }
+
     });
 
     // Sort the entire list once
@@ -165,11 +197,11 @@ function renderPagedResults() {
 
     // Display the 10 items
     paginatedItems.forEach(res => {
-        displayUni(uniDisplay, res.name, res.type, res.displayLocation);
+        displayUni(uniDisplay, res.name, res.type, res.location);
     });
 
     paginatedItems.forEach(res => {
-        displayResults(uniDisplay, res.name, res.type, res.displayLocation);
+        displayResults(uniDisplay, res.name, res.type, res.location);
     });
 
 
@@ -264,43 +296,52 @@ function displayUni(uniDisplay, name, type, location) {
     uniInfo.append(topRow, bottomRow);
 }
 
+function searchUniversity(source){
+    let query 
+    if(source){
+        query = document.getElementById("searchContainer").value
+    } else {
+        query = localStorage.getItem("query")
+        document.getElementById("searchContainer").innerHTML = query
+    }
 
-searchUniversity()
-
-function searchUniversity(){
-    let querry = localStorage.getItem("querry")
-
-    let results = []
+    filteredUniList = []
     Object.values(allUni).forEach((a) =>{
         for(let i = 0; i< a.length; i++){
-            if(new RegExp(querry, "i").test(a[i].name)){
-                results.push(a[i])
+            if(new RegExp(query, "i").test(a[i].name)){
+                filteredUniList.push(a[i])
             }
         }
+    });
+
+    
+    Object.keys(allUni).forEach(reg => {
+        const matchedProvinces = provinces.filter(p => p.code.startsWith(reg));
+        matchedProvinces.forEach(pro => {
+            matchedMuni = matchMuncipalities(pro.code.substring(0, 5), pro.name)
+            matchedMuni[pro.name].forEach(muni => {
+                filteredUniList.forEach(res => {
+                    const regex = new RegExp(`\\b${muni}\\b`, "i");
+                    if (regex.test(res.location)) {
+                        const displayLocation = pro.name ? `${muni}, ${pro.name}` : muni;
+                        res['location'] = displayLocation;
+                    }
+                })
+            })
+        })
     });
     
-    displayResults(results)
+    // Sort the entire list once
+    filteredUniList = uniSort(filteredUniList);
+    
+    // Reset to page 1 and render
+    currentPage = 1;
+    renderPagedResults();
 }
-
-function typeIdentifier(type){
-    let results = []
-    let total = 0
-    Object.values(allUni).forEach((a) =>{
-        for(let i = 0; i< a.length; i++){
-            if(a[i].type.toLowerCase() == type.toLowerCase()){
-                results.push(a[i])
-            }
-        }
-        
-    });
-    return results
-}
-
 
 
 function displayResults(results, name, location){
     results.forEach(content =>{
-        
         const uniDisplay = document.getElementById("universities");
 
         //Create new container
@@ -352,4 +393,58 @@ function displayResults(results, name, location){
 
         uniInfo.append(topRow, bottomRow);
     });
+}
+
+async function search(name, loc) {
+    const query = `${name}, ${loc}, philippines official website'`
+    const url = 'https://api.langsearch.com/v1/web-search'
+
+    let response = await fetch(url, {
+        method: 'POST', 
+        headers: {
+            'Authorization' : 'Bearer sk-c399636d05c542a0b1e51e676bf89078', 
+            'Content-Type' : 'application/json'
+        },
+        body: JSON.stringify({
+        "query": query,
+        "freshness": "noLimit",
+        "summary": false,
+        "count": 5
+        })
+    })
+    let data = await response.json();
+    let keywords = [
+        "edu.ph",
+        "gov.ph",
+        "classmate.ph",
+        "wikipedia",
+        "noMatch"
+    ]
+
+    let uniUrl = ""
+    keywords.some(key => {
+        if(key == "noMatch"){
+            uniUrl = data.data.webPages.value[0].url
+            return true
+        }
+
+        return data.data.webPages.value.some(url =>{
+            const regex = new RegExp(`\\b${key}\\b`, "i");
+            if(regex.test(url.url)){
+                uniUrl = url.url
+                return true
+            }
+        })
+
+        }); 
+
+    return uniUrl
+}
+
+document.getElementById("searchButt").addEventListener("click", () =>{
+    searchUniversity(true);
+});
+
+if (filter != null) {
+    searchUniversity(false);
 }
