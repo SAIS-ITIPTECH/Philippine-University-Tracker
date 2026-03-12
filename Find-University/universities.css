@@ -337,8 +337,6 @@ select option{
     margin: 0;
 }
 
-
-
 .uniButtonGroup button {
     padding: 8px 16px;
     font-size: 14px;
@@ -355,13 +353,7 @@ select option{
 }
 
 .uniButtonGroup button:hover {
-    background-color: #f5f5f5;
-    border-color: #bbb;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-}
-
-.uniButtonGroup button:hover {
-    background-color: #f5f5f5;
+    background-color: #d5610e;
     border-color: #bbb;
     box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
@@ -482,3 +474,100 @@ hr{
 }
 
 
+@media (max-width: 400px) {
+    .container {
+        flex-direction: column;
+        height: auto;
+        padding-top: 20px;
+    }
+
+    .filters, .universities {
+        width: 100%;
+        height: auto;
+        box-shadow: 0px 2px 8px rgba(0,0,0,0.1);
+    }
+
+    .nav {
+        flex-direction: column;
+        height: auto;
+        padding: 10px 0;
+    }
+
+    .logo {
+        width: 180px;
+        margin-bottom: 10px;
+    }
+
+    .navlinks ul {
+        padding: 0;
+        justify-content: center;
+    }
+        .navLinks ul li:nth-last-child(2) a {
+        border-right: none;
+        padding-right: 0;
+    }
+    .navLinks ul li:last-child a{
+    text-decoration: none;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    color: rgb(122, 47, 0);
+    font-size: 13px;
+    font-weight: 500;
+    padding: 0px;
+    border: none;
+    }
+    .navLinks a {
+        font-size: 13px;
+    }
+    .universities{
+        height: 120%;
+    }
+    .findPage{
+    height: 330vh;
+    padding: 0;
+    margin: 0;
+}
+
+    .uniTopRow {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+
+    .uniButtonGroup {
+        width: 100%;
+        flex-direction: row;
+        justify-content: flex-start;
+    }
+
+    .uniBottomRow {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .pagination-container {
+        width: 90%;
+        margin: 20px auto;
+        flex-wrap: wrap;
+    }
+
+    .foot {
+        height: auto;
+        padding-bottom: 20px;
+    }
+
+    .footCon {
+        flex-direction: column;
+        width: 90%;
+        gap: 30px;
+    }
+
+    .infooter, .f {
+        width: 100%;
+        padding-left: 0;
+        text-align: center;
+    }
+
+    .infooter p {
+        margin: 0 auto;
+    }
+}

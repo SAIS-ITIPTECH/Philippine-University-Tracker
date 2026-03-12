@@ -226,43 +226,65 @@ hr{
 }
 
 
-@media (max-width: 768px) {
+@media screen and (max-width: 450px) {
     .nav {
-        height: auto;
         flex-direction: column;
+        height: auto;
         padding: 10px 0;
     }
 
-    .navLinks ul {
+    .logo {
+        width: 180px;
+        margin-bottom: 10px;
+    }
+
+    .navlinks ul {
         padding: 0;
-        flex-wrap: wrap;
         justify-content: center;
     }
-
-    .navLinks ul li {
-        margin: 5px 10px;
-    }
-
-    .navLinks ul li:nth-last-child(2) a {
+        .navLinks ul li:nth-last-child(2) a {
         border-right: none;
+        padding-right: 0;
+    }
+    .navLinks ul li:last-child a{
+    text-decoration: none;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    color: rgb(122, 47, 0);
+    font-size: 13px;
+    font-weight: 500;
+    padding: 0px;
+    border: none;
+    }
+    .navLinks a {
+        font-size: 13px;
     }
 
     .homeContent {
         width: 90%;
-        padding: 10px;
+        padding: 20px;
         margin: 10% auto;
+    }
+
+    .homeImage {
+        width: 150px;
+        height: 150px;
     }
 
     .homeContent h1 {
         font-size: 1.8rem;
     }
 
-    .homeContent h3 {
-        font-size: 1rem;
-    }
-
     .search {
         width: 100%;
+    }
+
+    .search input {
+        width: 75%;
+        font-size: 0.9rem;
+    }
+
+    #searchIcon {
+        width: 25%;
     }
 
     .searchCategories {
@@ -282,19 +304,16 @@ hr{
 
     .footCon {
         flex-direction: column;
+        width: 90%;
         align-items: center;
         text-align: center;
-        width: 90%;
     }
 
     .infooter, .f {
         width: 100%;
-        padding: 20px 0;
-        margin: 0;
-    }
-
-    .infooter p {
-        width: 100%;
+        padding: 0;
+        margin-bottom: 30px;
+        background-position: center;
     }
 
     .f {
@@ -302,7 +321,9 @@ hr{
     }
 
     .ri {
-        margin: 20px auto;
+        margin-left: 0;
         text-align: center;
+        display: block;
+        padding-top: 10px;
     }
 }

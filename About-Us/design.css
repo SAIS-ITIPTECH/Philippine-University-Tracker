@@ -221,13 +221,6 @@ section{
 }
 
 
-
-
-
-
-
-
-
 .realImg{
     width: 90%;
     height: 90%;
@@ -350,4 +343,137 @@ hr{
     margin-left: 15%;
     color: white;
     font-size: 14px;
+}
+
+@media only screen and (max-width: 400px) {
+    body, html {
+        scroll-snap-type: none;
+    }
+
+    .nav {
+        flex-direction: column;
+        height: auto;
+        padding: 10px 0;
+    }
+
+    .logo {
+        width: 180px;
+        margin-bottom: 10px;
+    }
+
+    .navlinks ul {
+        padding: 0;
+        justify-content: center;
+    }
+        .navLinks ul li:nth-last-child(2) a {
+        border-right: none;
+        padding-right: 0;
+    }
+    .navLinks ul li:last-child a{
+    text-decoration: none;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    color: rgb(122, 47, 0);
+    font-size: 13px;
+    padding: 0px;
+    font-weight: 500;
+    border: none;
+    }
+    .navLinks a {
+        font-size: 13px;
+    }
+
+    .hero {
+        height: auto;
+        padding-bottom: 50px;
+    }
+
+    .heroTitle {
+        font-size: 28px;
+        padding-top: 50px;
+    }
+
+    .heroDesc {
+        font-size: 16px;
+        padding: 10px;
+    }
+
+    .aboutProCon {
+        width: 90%;
+        margin: 40px auto 0;
+        padding: 0;
+    }
+
+    .secHero {
+        font-size: 24px;
+        text-align: center;
+    }
+
+    .secDesc {
+        text-align: center;
+    }
+
+    .aboutImage {
+        position: static;
+        width: 90%;
+        margin: 20px auto;
+        height: 200px;
+    }
+
+    .chooseUs {
+        height: auto;
+        padding-bottom: 40px;
+    }
+
+    .creators {
+        height: auto;
+        flex-direction: column;
+        padding: 40px 0;
+    }
+
+    .intro {
+        width: 95%;
+        margin: 0 auto;
+    }
+
+    .creatorName {
+        width: 95%;
+        margin: 0 auto;
+    }
+
+    .cre {
+        flex-direction: column;
+        text-align: center;
+        padding: 20px 0;
+    }
+
+    .icons {
+        margin: 15px auto;
+    }
+
+    .foot {
+        height: auto;
+        padding: 30px 0;
+    }
+
+    .footCon {
+        flex-direction: column;
+        width: 90%;
+        align-items: center;
+        text-align: center;
+    }
+
+    .infooter, .f {
+        width: 100%;
+        padding: 10px 0;
+        margin: 0;
+    }
+
+    .f li {
+        padding: 0;
+    }
+
+    .ri {
+        margin: 20px 0;
+        text-align: center;
+    }
 }
